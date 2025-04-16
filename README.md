@@ -67,7 +67,31 @@ Pick One and be sure you are inside /landing_page
         </form>
     ```
 - Open the landing_page/app/Http/Controllers/Login.php
-
+# ROLES TO SELECT
+    [   
+        'HRSupervisor',
+        'FinanceOfficer',
+        'AuditOfficer',
+        'MaintenanceStaff',
+        'MaintenanceAdmin',
+        'ProjectManager',
+        'TeamMember',
+        'AssetAdmin',
+        'AssetStaff',
+        'AssetAnalyst',
+        'WarehouseManager',
+        'InventoryStaff',
+        'Supplier',
+        'ProcurementAdministrator',
+        'QualityInspector',
+        'ProcurementAnalyst',
+        'CommunicationOfficer',
+        'PayrollOfficer',
+        'ADMIN',
+        'EMPLOYEE',
+        'HRAdministrator',
+        'Manager/Supervisor'
+    ]
 ## FOR Plain PHP USERS
 - add a case to this switch so that your specific role will be selected on redirect
     ```bash
