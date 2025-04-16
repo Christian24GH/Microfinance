@@ -29,7 +29,7 @@ Make sure you have the following installed:
 
 # 2. OPEN .env file inside /landing_page and search for this, then copy and past this to the .env file
 ```bash 
-    B_CONNECTION=mariadb
+    DB_CONNECTION=mariadb
     DB_HOST=127.0.0.1
     DB_PORT=3306
     DB_DATABASE=microfinance
@@ -56,3 +56,4 @@ Pick One and be sure you are inside /landing_page
     ├── landing_page/     <-- Laravel App
     ├── LogisticOne/          <-- Other plain php file
     ├── LogisticTwo/          <-- Paste your projects inside Microfinance/
+
