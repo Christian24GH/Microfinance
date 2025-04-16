@@ -57,3 +57,31 @@ Pick One and be sure you are inside /landing_page
     ├── LogisticOne/          <-- Other plain php file
     ├── LogisticTwo/          <-- Paste your projects inside Microfinance/
 
+# SETUP Role Authorization and Redirects
+- After placing your folder, copy paste the session.php and index.php logout element at the /testapp
+- place the /testapp/session.php file at your project root folder.
+- paste the element inside /testapp/index.php at your desired file.
+    ```bash
+        <form action="./session.php" method="POST">
+            <button type="submit" name="logout">Logout</button> # feel free to modify the button BUT not the FORM action and method!
+        </form>
+    ```
+- Open the landing_page/app/Http/Controllers/Login.php
+
+## FOR Plain PHP USERS
+- add a case to this switch so that your specific role will be selected on redirect
+    ```bash
+        switch($user->role){
+            case 'EMPLOYEE':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
+                break;
+            case 'YOUR_ROLE_HERE':
+                return response()->redirectTo("YOUR_PROJECT_INDEX_FILE_ABSOLUTE_FILE_HERE/index.php?sid="$sessionKet);
+                break;
+            default:
+                return back()->with(['fail' =>'Invalid Role']);
+                break;
+        }
+    ```
+## FOR Laravel 
+## FOR Django

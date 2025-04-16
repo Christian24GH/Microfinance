@@ -9,7 +9,7 @@
     <title>TEST APP</title>
 </head>
 <body>
-    <form method="POST">
+    <form action="./session.php" method="POST">
         <button type="submit" name="logout">Logout</button>
     </form>
 </body>
