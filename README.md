@@ -4,11 +4,9 @@
 
 ### Prerequisites
 Make sure you have the following installed:
-- PHP >= 8.x
 - Composer
-- MySQL or other supported database
 - Node.js & NPM
-- xampp
+- XAMPP
 
 ### 1. Clone the Repository
 - Ensure that your terminal (CMD) directory is inside /xampp/htdocs/dashboard/Microfinance
