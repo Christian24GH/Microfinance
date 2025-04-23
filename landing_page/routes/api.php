@@ -5,15 +5,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return response()->json($request->user());
 });
 
 
-Route::get('/fetch-token', function (\Illuminate\Http\Request $request) {
+Route::get('/fetch-token', function (Request $request) {
+    //dd($request);
     $sid = $request->query('sid');
-    $token = Cache::get("session:$sid");
+    $token = Cache::get("microfinance_cache_session:$sid");
+
+    //return response()->json(['message', "sid=$sid\ntoken=$token"]);
 
     if (!$token) {
         return response()->json(['error' => 'Invalid session ID'], 401);

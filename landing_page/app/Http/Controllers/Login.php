@@ -32,11 +32,15 @@ class Login extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $sessionKey = Str::uuid()->toString();
-        Cache::put("session:$sessionKey", $token, now()->addMinutes(60)); 
 
+        Cache::put("microfinance_cache_session:$sessionKey", $token, now()->addMinutes(60));
+        
         switch($user->role){
             case 'EMPLOYEE':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
+                break;
+            case 'MaintenanceAdmin':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
                 break;
             default:
                 return back()->with(['fail' =>'Invalid Role']);
@@ -46,6 +50,7 @@ class Login extends Controller
     
     public function logout(Request $request)
     {
+        //dd($request);
         $data = json_decode($request->getContent(), true);
         $sid = $data['sid'] ?? null;
         $token = $request->bearerToken();
@@ -56,7 +61,7 @@ class Login extends Controller
         }
 
         if ($sid) {
-            Cache::forget("session:$sid");
+            Cache::forget("microfinance_cache_session:$sid");
         }
 
         return response()->json([

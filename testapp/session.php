@@ -17,7 +17,9 @@
         header("Location: http://localhost/dashboard/Microfinance/landing_page/public/login");
         exit;
     }
-    echo $token;
+    session_start();
+
+    $_SESSION['token'] = $token;
 
     $ch = curl_init("http://localhost/dashboard/Microfinance/landing_page/public/api/user");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -28,7 +30,6 @@
 
     $response = curl_exec($ch);
 
-    //echo $response;
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
@@ -39,11 +40,14 @@
     
 
     $user = json_decode($response, true);
-    echo $response;
-
     /*you can now use $user values as values to the $_SESSION global var in php
     *   $_SESSION['fullname'];
     */
+    $_SESSION['role']=$user['role'];
+    $_SESSION['email']=$user['email'];
+    $_SESSION['id']=$user['id'];
+    $_SESSION['fullname']=$user['fullname'];
+
     //logout
     function logout($sid, $token) {
         $data = json_encode(['sid' => $sid]);
@@ -67,9 +71,8 @@
             exit;
         };
     }
-
+    
     if(isset($_POST['logout'])){
-        
         logout($sid, $token);
     }
 
