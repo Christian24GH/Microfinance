@@ -12,12 +12,13 @@ return new class extends Migration
     
     public function up(): void
     {
-        Schema::table('Accounts', function(Blueprint $table){
+        Schema::create('accounts', function(Blueprint $table){
             $table->id();
             $table->string('fullname', 255);
             $table->string('email', 255)->unique();
             $table->string('password', 255);
             $table->enum('role', [
+                'Client',
                 'HRSupervisor',
                 'FinanceOfficer',
                 'AuditOfficer',
@@ -51,7 +52,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('Accounts');
+        Schema::dropIfExists('accounts');
     }
     
 };

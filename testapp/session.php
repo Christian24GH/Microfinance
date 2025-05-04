@@ -67,11 +67,12 @@
         curl_close($ch);
 
         if($response['status'] == 200){
+            session_destroy();
             header("Location: http://localhost/dashboard/Microfinance/landing_page/public/login");
             exit;
         };
     }
-    
+
     if(isset($_POST['logout'])){
         logout($sid, $token);
     }

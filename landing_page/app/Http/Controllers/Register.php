@@ -31,7 +31,7 @@ class Register extends Controller
                     'fullname' => $request->input('fullname'),
                     'email' => $request->input('email'),
                     'password' => Hash::make($request->input('password')),
-                    'role' => 'EMPLOYEE'
+                    'role' => 'Client'
                 ]);
             });
 
