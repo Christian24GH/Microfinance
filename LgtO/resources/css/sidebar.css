@@ -1,21 +1,46 @@
+::-webkit-scrollbar{
+    display: none;
+}
+.logo img{
+    object-fit: contain;
+    height: 5rem;
+    padding: 0;
+    aspect-ratio: 1/1;
+}
 #sidebar{
     background-color: var(--mfc6);
     color: var(--mfc1);
     height: 100vh;
-    width: 25rem;
     position: fixed;
-    left: 0;
+    left:0;
     z-index: 10;
+    overflow-y: auto;
 }
+
 #sidebar hr{
     border: 1px solid var(--mfc1) ;
 }
-#sidebar #profile h5{
+
+#sidebar #profile{
+    height:5rem;
+}
+#sidebar #profile h6,
+#sidebar #profile h6 small{
+    margin: 0;
+}
+#sidebar #profile h6{
     color: var(--mfc8) !important;
 }
+
 #sidebar .img_container{
     width: 5rem !important;
     aspect-ratio: 1/1 !important;
+}
+#sidebar #profile a.btn{
+    color:var(--mfc8);
+}
+#sidebar #profile a.btn:hover{
+    color:var(--mfc1);
 }
 .navs button{
     text-decoration:none;

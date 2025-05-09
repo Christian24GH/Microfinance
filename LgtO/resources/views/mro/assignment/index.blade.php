@@ -1,10 +1,5 @@
 @extends('layout.default')
 
-@section('content_header')
-<div class="container-fluid border border-bottom-2 px-5 d-flex justify-content-between align-items-center">
-    <h3 class="py-5">Maintenance Tasks</h3>
-</div>
-@endsection
 @section('content')
 <div class="container-fluid pt-2">
     <div class="px-2 min-vh-100 table-responsive">
@@ -19,6 +14,7 @@
                     <th>description</th>
                     <th>location</th>
                     <th>priority</th>
+                    <th>Report</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +28,7 @@
                     <td>{{ $task->description }}</td>
                     <td>{{ ucfirst($task->location) }}</td>
                     <td>{{ ucfirst($task->priority) }}</td>
-                    <td class="border border-0 ps-2 d-flex justify-content-center">
+                    <td class="">
                         <button class="btn btn-primary">Make Report</button>
                     </td>
                 </tr>

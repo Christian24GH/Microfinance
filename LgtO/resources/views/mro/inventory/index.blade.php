@@ -1,13 +1,8 @@
 @extends('layout.default')
 
-@section('content_header')
-<div class="container-fluid border border-bottom-2 px-5 d-flex justify-content-between align-items-center">
-    <h3 class="py-5">Parts Inventory</h3>
-</div>
-@endsection
 @section('content')
 <div class="container-fluid pt-2">
-    <div class="px-2 min-vh-100 table-responsive">
+    <div class="px-2 table-responsive">
         <table class="table align-middle">
             <thead>
                 <tr>
@@ -21,6 +16,7 @@
                     <th>Reorder Level</th>
                     <th>Unit Cost (₱)</th>
                     <th>Status</th>
+                    <th>Option</th>
                 </tr>
             </thead>
             <tbody>

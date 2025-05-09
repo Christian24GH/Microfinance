@@ -1,68 +1,94 @@
-<div id="sidebar" class="vstack px-4">
-    <div class="py-3">
-        <h3 class="montserrat-header">{{$title}}</h3>
+<div id="sidebar" class="vstack visually-hidden">
+    <div class="d-flex align-items-center ps-2" style="height: 3rem;">
+        <h4 class="mb-0">TruLend</h4>
     </div>
     
-    <div id="profile" class="d-flex gap-3 align-items-center ps-1 py-4">
-        <div class="border img_container">
-            <img src="" class="rounded-circle" alt="">
-        </div>
-        <div class="lato-regular">
-            <h5>{{isset($fullname) ? $fullname : 'Undefined';}}</h5>
-            <h6>{{isset($role) ? $role : 'Undefined';}}</h6>
-        </div>
-    </div>
-    <hr>
-    <div class="navs d-flex flex-column gap-1 align-items-center justify-content-center position-relative">
-    @if($role === "Maintenance Admin")
-        <div class="py-2 hstack gap-3 nav-item {{ request()->routeIs('mro.dashboard') ? 'active' : ''}}" >
+    <br>
+    <p class="px-4">General</p>
+    <div class="navs px-4 d-flex flex-column gap-1 align-items-center justify-content-center position-relative">
+    @switch($role)
+        @case("Maintenance Admin")
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('mro.dashboard') ? 'active' : ''}}" >
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
                 <i class="bi bi-speedometer2"></i>
             </h3>
             <a class="nunito-nav" href="{{route('mro.dashboard')}}" >Dashboard</a>
         </div>
 
-        <div class="py-2 hstack gap-3 nav-item {{ request()->routeIs('mro.workorder.index') || request()->routeIs('mro.task')  ? 'active' : ''}}">
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('mro.workorder.index') || request()->routeIs('mro.task')  ? 'active' : ''}}">
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
                 <i class="bi bi-stack"></i>
             </h3>
             <a class="nunito-nav" href="{{ route('mro.workorder.index') }}" >Work Orders</a>
         </div>
 
-        <div class="py-2 hstack gap-3 nav-item  {{ request()->routeIs('mro.assignment.index') ? 'active' : '' }}">
+        <div class="py-0 hstack gap-3 nav-item  {{ request()->routeIs('mro.assignment.index') ? 'active' : '' }}">
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
                 <i class="bi bi-check-square"></i>
             </h3>
             <a class="nunito-nav" href="{{ route('mro.assignment.index') }}">Assigned Tasks</a>
         </div>
 
-        <div class="py-2 hstack gap-3 nav-item {{ request()->routeIs('mro.logs') ? 'active' : ''}}">
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('mro.logs') ? 'active' : ''}}">
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
                 <i class="bi bi-clock-history"></i>
             </h3>
             <a class="nunito-nav" href="{{ route('mro.logs') }}" >Logs</a>
         </div>
 
-        <div class="py-2  hstack gap-3 nav-item {{ request()->routeIs('mro.inventory.index') ? 'active' : ''}}">
+        <div class="py-0  hstack gap-3 nav-item {{ request()->routeIs('mro.inventory.index') ? 'active' : ''}}">
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
                 <i class="bi bi-backpack"></i>
             </h3>
             <a class="nunito-nav" href="{{ route('mro.inventory.index') }}" >Inventory</a>
-        </div>   
-        
-        <div class="d-flex w-100 flex-column">
-            <hr>
         </div>
-        <!--Logout-->
-        <div class="py-2 hstack gap-3 nav-item">
+        @break
+
+
+        @case("Procurement Administrator")
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('prc.dashboard.index') ? 'active' : ''}}" >
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
-                <i class="bi bi-power"></i>
+                <i class="bi bi-speedometer2"></i>
             </h3>
+            <a class="nunito-nav" href="{{route('prc.dashboard.index')}}" >Dashboard</a>
+        </div>
+        
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('prc.request.index') ? 'active' : ''}}" >
+            <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
+                <i class="bi bi-box-fill"></i>
+            </h3>
+            <a class="nunito-nav" href="{{route('prc.request.index')}}" >Procurement</a>
+        </div>
+        
+        
+        @break
+    
+    @endswitch
+    </div>
+    <div class="position-absolute bottom-0 container border-top">
+        <div id="profile" class="d-flex align-items-center justify-content-between px-4 pt-1"
+            style="height: 5rem">
+
+            <div class="lato-regular">
+                <h6>{{isset($fullname) ? $fullname : 'Undefined';}}</h6>
+                <small>{{isset($role) ? $role : 'Undefined';}}</small>
+            </div>
+
             <form action="{{url('/logout')}}" method="POST">
                 @csrf
-                <button class="nunito-nav" type="submit">Logout</button>
+                <div class="dropdown">
+                    <a class="btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </a>    
+                    <ul class="dropdown-menu">
+                        <button class="btn dropdown-item" type="submit">
+                            <i class="bi bi-box-arrow-left"></i>
+                            Logout
+                        </button>
+                    </ul>
+                </div>
             </form>
         </div>
     </div>
-    @endif
+    
 </div>

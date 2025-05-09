@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 class AssignmentController extends Controller
 {
     public function index(){
-        $viewdata = app(MROController::class)->init();
-        
+        $viewdata = $this->init();
+        $viewdata += ['pageTitle'=>'Maintenance Tasks'];
         $id = session('user')->id;
         $technician = DB::table('technicians')->where('account_id', $id)->first(['id']);
 

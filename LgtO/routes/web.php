@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AssignmentController;
-use App\Http\Controllers\MROController;
+use App\Http\Controllers\MRODashboard;
+use App\Http\Controllers\MROLogs;
 use App\Http\Controllers\PartsInventoryController;
+use App\Http\Controllers\PRCAcquisitionController;
+use App\Http\Controllers\PRCDashboard;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WorkOrders;
 use App\Http\Middleware\ValidSession;
@@ -15,9 +18,8 @@ Route::post('/logout', [SessionController::class, 'logout']);
 
 Route::middleware([ValidSession::class])->prefix('/mro')->group(function ()
 {
-    Route::get('/dashboard', [MROController::class, 'dashboard'])->name('mro.dashboard');
-    Route::get('/logs', [MROController::class, 'log'])->name('mro.logs'); 
-    Route::get('/inventory', [MROController::class, 'inventory'])->name('mro.inventory');
+    Route::get('/dashboard', [MRODashboard::class, 'dashboard'])->name('mro.dashboard');
+    Route::get('/logs', [MROLogs::class, 'log'])->name('mro.logs');
     
     #WorkOrder
     Route::get('/workOrder', [WorkOrders::class, 'index'])->name('mro.workorder.index');
@@ -38,4 +40,19 @@ Route::middleware([ValidSession::class])->prefix('/mro')->group(function ()
 
     #Assigned Tasks for Technicians
     Route::get('/assignment', [AssignmentController::class, 'index'])->name('mro.assignment.index');
+});
+
+Route::middleware([ValidSession::class])->prefix('/procurement')->group(function () {
+    //Dashboard
+    Route::get('/dashboard', [PRCDashboard::class, 'index'])->name('prc.dashboard.index');
+
+    //Request-Management
+    Route::get('/request-management', [PRCAcquisitionController::class, 'request_index'])->name('prc.request.index');
+    Route::post('/request-management/store', [PRCAcquisitionController::class, 'request_store'])->name('prc.request.store');
+    Route::post('/request-management', [PRCAcquisitionController::class, 'request_update'])->name('prc.request.update');
+    Route::delete('/request-management/{id}', [PRCAcquisitionController::class, 'request_destroy'])->name('prc.request.destroy');
+    
+    //Bidding
+
+
 });

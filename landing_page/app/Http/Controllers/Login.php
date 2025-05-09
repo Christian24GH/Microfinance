@@ -42,6 +42,9 @@ class Login extends Controller
             case 'MaintenanceAdmin':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
                 break;
+            case 'ProcurementAdministrator':
+                    return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
+                    break;
             default:
                 return back()->with(['fail' =>'Invalid Role']);
                 break;

@@ -11,7 +11,8 @@ use SweetAlert2\Laravel\Swal;
 class PartsInventoryController extends Controller
 {
     public function index(){
-        $viewdata = app(MROController::class)->init();
+        $viewdata = $this->init();
+        $viewdata += ['pageTitle'=>'Parts Inventory'];
         $partsInventory = DB::table('parts_inventory')->get();
         return view("mro.inventory.index", $viewdata)
             ->with('partsInventory', $partsInventory);

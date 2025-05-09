@@ -8,7 +8,7 @@ use SweetAlert2\Laravel\Swal;
 class WorkOrders extends Controller
 {
     public function index(){
-        $viewdata = app(MROController::class)->init();
+        $viewdata = $this->init();
         $assets = DB::table('assets')->get(['id', 'asset_tag']);
         $workOrders = DB::table('work_orders')
                 ->join('schedules', 'schedules.id', '=', 'work_orders.schedule_id', 'inner')
@@ -18,6 +18,10 @@ class WorkOrders extends Controller
                     'asset_id'=>'work_orders.asset_id',
                 ]);
         //dd($workOrders);
+        $viewdata += [
+            'pageTitle'=>'Work Orders',
+            'hasBtn' => 'addWork',
+        ];
         return view("mro.workorder.index", $viewdata)->with('assets', $assets)->with('workOrders', $workOrders);
     }
 
@@ -158,8 +162,8 @@ class WorkOrders extends Controller
 
     public function task(){
 
-        $viewdata = app(MROController::class)->init();;
-
+        $viewdata = $this->init();
+        $viewdata += ['pageTitle'=>'Tasks',];
         $workOrders = DB::table('work_orders')
             ->where('status', 'pending')
             ->get();

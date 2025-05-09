@@ -10,7 +10,7 @@
 <body>
     <main class="position-relative vh-100">
         <div class="container card border position-absolute top-50 start-50 translate-middle p-5 authform">
-            <div class="card-body">
+            <div class="card-body" style="width: 30rem">
                 <h3 class="text-center">Welcome to {{ENV('APP_NAME')}}</h3>
                 <br>
                 <h6 class="text-center text-body-secondary">Login and start exploring our app!</h6>

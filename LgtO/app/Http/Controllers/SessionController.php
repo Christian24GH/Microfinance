@@ -28,7 +28,13 @@ class SessionController extends Controller
         //your custom redirection logic here
         //stores to session for later use
         session(['user'=>$currentUser, 'token'=>$token, 'sid' =>$sid]);
-        return redirect()->route("mro.dashboard");
+        switch(session('user')->role){
+            case 'MaintenanceAdmin':
+                return redirect()->route("mro.dashboard");
+
+            case 'ProcurementAdministrator':
+                    return redirect()->route("prc.dashboard.index");
+        }
     }
 
     public function logout(){

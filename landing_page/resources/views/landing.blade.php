@@ -12,7 +12,7 @@
         <div class="container-fluid d-flex justify-content-between align-items-center h-100">
 
             <a class="navbar-brand text-light fw-bold" href="#">
-                <h3 class="m-0 montserrat-header">Microfinance</h3>
+                <h3 class="m-0 montserrat-header">{{ENV('APP_NAME')}}</h3>
             </a>
 
             <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
