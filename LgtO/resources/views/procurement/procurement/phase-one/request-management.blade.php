@@ -69,12 +69,12 @@
 <nav class="pages ms-1 mt-1">
     <div class="d-flex border-0 rounded-top-3">
         <div class="bg active"><a><p class="lato-bold m-0">Requests</p></a></div>
-        <div class="bg"><a href=""><p class="lato-bold m-0">Bidding</p></a></div>
+        <div class="bg"><a href="{{route('prc.bid.index')}}"><p class="lato-bold m-0">Bidding</p></a></div>
     </div>
 </nav>
 @endsection
 @section('content')
-<div class="container border py-2">
+<div class="container-fluid border py-2">
     <h6 class="mb-0">List of Acquistion Request</h6>
     <table class="table align-middle">
         <thead>

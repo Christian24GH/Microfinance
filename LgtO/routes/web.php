@@ -53,6 +53,14 @@ Route::middleware([ValidSession::class])->prefix('/procurement')->group(function
     Route::delete('/request-management/{id}', [PRCAcquisitionController::class, 'request_destroy'])->name('prc.request.destroy');
     
     //Bidding
+    Route::get('/bid-management', [PRCAcquisitionController::class, 'bids_index'])->name('prc.bid.index');
+    Route::post('/bid-management', [PRCAcquisitionController::class, 'bids_update'])->name('prc.bid.update');
 
+    //Document
+    Route::get('/invoice-management', [PRCAcquisitionController::class, 'invoice_index'])->name('prc.invoice.index');
+    Route::post('/invoice-management/{id}', [PRCAcquisitionController::class, 'invoice_update'])->name('prc.invoice.update');
+    Route::post('/invoice-management/markAsPaid/{id}', [PRCAcquisitionController::class, 'invoice_markAsPaid'])->name('prc.invoice.markAsPaid');
 
+    Route::get('/receipt-management', [PRCAcquisitionController::class, 'receipts_index'])->name('prc.receipt.index');
+    Route::get('/receipt-management/{id}', [PRCAcquisitionController::class, 'receipts_show'])->name('prc.receipt.show');
 });

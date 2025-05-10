@@ -53,13 +53,21 @@
             <a class="nunito-nav" href="{{route('prc.dashboard.index')}}" >Dashboard</a>
         </div>
         
-        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('prc.request.index') ? 'active' : ''}}" >
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('prc.request.index')||
+            request()->routeIs('prc.bid.index') ? 'active' : ''}}" >
             <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
                 <i class="bi bi-box-fill"></i>
             </h3>
             <a class="nunito-nav" href="{{route('prc.request.index')}}" >Procurement</a>
         </div>
-        
+
+        <div class="py-0 hstack gap-3 nav-item {{ request()->routeIs('prc.invoice.index')
+                || request()->routeIs('prc.receipt.index') ? 'active' : ''}}" >
+            <h3 class="rounded-3 d-flex align-items-center justify-content-center" style="height: 3rem; width:3rem">
+                <i class="bi bi-file-earmark-fill"></i>
+            </h3>
+            <a class="nunito-nav" href="{{route('prc.invoice.index')}}" >Bills and Receipts</a>
+        </div>
         
         @break
     
