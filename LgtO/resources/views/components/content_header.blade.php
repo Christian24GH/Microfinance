@@ -17,6 +17,21 @@
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#procurementRequestModal">Procure</button>
             </div>
             @break
+            @case('createProjectModal')
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">Create Project</button>
+            </div>
+            @break
+            @case('createTeamModal')
+            <div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTeamModal">Create Team</button>
+            </div>
+            @break
+            @case('addAssetModal')
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssetModal">
+                Add New Asset
+            </button>
+            @break
         @endswitch
     @endisset
 </div>

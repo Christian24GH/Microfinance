@@ -18,6 +18,18 @@ abstract class Controller
                 $roleFormat = 'Procurement Administrator';
                 $title = 'Procurement';
                 break;
+            case 'ProjectManager':
+                $roleFormat = 'Project Manager';
+                $title = 'Project Management';
+                break;
+            case 'AssetAdmin':
+                $roleFormat = 'Asset Admin';
+                $title = 'Asset Management';
+                break;
+            case 'WarehouseManager':
+                $roleFormat = 'Warehouse Manager';
+                $title = 'Warehousing';
+                break;
             default:
                 $roleFormat = '';
                 $title = '';
@@ -25,7 +37,6 @@ abstract class Controller
         }
         $viewdata = [
             'title'=> $title,
-            'role'=> 'Maintenance Admin',
             'id' => $user->id,
             'fullname'=> $user->fullname,
             'email'=> $user->email,

@@ -39,12 +39,24 @@ class Login extends Controller
             case 'EMPLOYEE':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
                 break;
+
+            //Logistics 1
             case 'MaintenanceAdmin':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
                 break;
             case 'ProcurementAdministrator':
-                    return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
-                    break;
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
+                break;
+            case 'AssetAdmin':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
+                break;
+            case 'ProjectManager':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
+                break;
+            case 'WarehouseManager':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
+                break;
+                
             default:
                 return back()->with(['fail' =>'Invalid Role']);
                 break;

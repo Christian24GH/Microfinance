@@ -33,7 +33,16 @@ class SessionController extends Controller
                 return redirect()->route("mro.dashboard");
 
             case 'ProcurementAdministrator':
-                    return redirect()->route("prc.dashboard.index");
+                return redirect()->route("prc.dashboard.index");
+
+            case 'AssetAdmin':
+                return redirect()->route("ast.dashboard.index");
+
+            case 'ProjectManager':
+                return redirect()->route("pm.dashboard.index");
+            
+            case 'WarehouseManager':
+                return redirect()->route("wrh.dashboard.index");
         }
     }
 

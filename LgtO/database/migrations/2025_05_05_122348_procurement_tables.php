@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Optional: foreign key if you have a users table
-            // $table->foreign('requested_by')->references('id')->on('users');
+            $table->foreign('requested_by')->references('id')->on('accounts');
         });
         
         Schema::create('procurement_bids', function(Blueprint $table){
@@ -42,12 +42,11 @@ return new class extends Migration
                 ->on('procurement_requests')
                 ->onDelete('cascade');
             
-            /*
             $table->foreign('supplier_id')
                 ->references('id')
                 ->on('vendors')
                 ->onDelete('cascade');
-            */
+        
         });
 
         Schema::create('procurement_invoices', function (Blueprint $table) {

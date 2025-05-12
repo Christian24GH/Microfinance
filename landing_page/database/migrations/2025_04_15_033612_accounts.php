@@ -25,7 +25,6 @@ return new class extends Migration
                 'MaintenanceStaff',
                 'MaintenanceAdmin',
                 'ProjectManager',
-                'TeamMember',
                 'AssetAdmin',
                 'AssetStaff',
                 'AssetAnalyst',
@@ -37,10 +36,12 @@ return new class extends Migration
                 'ProcurementAnalyst',
                 'CommunicationOfficer',
                 'PayrollOfficer',
-                'ADMIN',
-                'EMPLOYEE',
+                'Admin',
+                'Employee',
                 'HRAdministrator',
-                'Manager/Supervisor'
+                'Manager/Supervisor',
+                'TeamMember',
+                'TeamLeader'
             ]);
             $table->rememberToken();
         });
