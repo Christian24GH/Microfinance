@@ -56,7 +56,9 @@ class Login extends Controller
             case 'WarehouseManager':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
                 break;
-                
+            case 'HRAdministrator':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/hr2/hrms/Dashboard.php?sid=$sessionKey");
+                break;
             default:
                 return back()->with(['fail' =>'Invalid Role']);
                 break;
