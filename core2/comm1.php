@@ -1,4 +1,5 @@
 <?php
+include __DIR__.'/components/session.php';
 // Include your database connection
 require_once 'config/db.php';
 
@@ -17,115 +18,30 @@ $totalSentToday = $row['total_sent_today'] ?? 0; // Default to 0 if no emails se
 
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css">
-    <script src="https://kit.fontawesome.com/ae360af17e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="css/sidebar.css"/>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 </head>
-
 <body>
-    <div class="wrapper">
-        <aside id="sidebar" class="js-sidebar">
-            <!-- Content For Sidebar -->
-            <div class="h-100">
-                <div class="sidebar-logo">
-                    <a href="index.php">Core 2</a>
-                </div>
-                <ul class="sidebar-nav">
-                    <li class="sidebar-header">
-                        Admin Control
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="index.php" class="sidebar-link">
-                            <i class="fa-solid fa-list pe-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-target="#pages" data-bs-toggle="collapse"
-                            aria-expanded="false"><i class="fa-solid fa-file-lines pe-2"></i>
-                    Communication
-                        </a>
-                        <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="comm1.php" class="sidebar-link">Comm Mgmt1</a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="comm2.php" class="sidebar-link">Comm Mgmt2</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="savings.php" class="sidebar-link collapsed"
-                            aria-expanded="false"><i class="fa-solid fa-sliders pe-2"></i>Savings Tracking
-                        </a>
-                    </li>
-                           <li class="sidebar-item">
-                        <a href="cons.php" class="sidebar-link collapsed"
-                            aria-expanded="false"><i class="fa-solid fa-sliders pe-2"></i>Consolidation
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="spm.php" class="sidebar-link collapsed" data-bs-target="#auth"
-                            aria-expanded="false"><i class="fa-regular fa-user pe-2"></i>
-                         Social Performance 
-                        </a>
-                    </li>
-                    <li class="sidebar-header">
-                  Settings
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-target="#multi" data-bs-toggle="collapse"
-                            aria-expanded="false"><i class="fa-solid fa-share-nodes pe-2"></i>
-                 Authority
-                        </a>
-                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a href="#" class="sidebar-link collapsed" data-bs-target="#level-1"
-                                    data-bs-toggle="collapse" aria-expanded="false">Account</a>
-                                <ul id="level-1" class="sidebar-dropdown list-unstyled collapse">
-                                    <li class="sidebar-item">
-                                        <a href="#" class="sidebar-link">Logout</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="#" class="sidebar-link">Register</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </aside>
-        <div class="main">
-            <nav class="navbar navbar-expand px-3 border-bottom">
-                <button class="btn" id="sidebar-toggle" type="button">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse navbar">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="image/profile.jpg" class="avatar img-fluid rounded" alt="">
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">Profile</a>
-                                <a href="#" class="dropdown-item">Logout</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+    <?php 
+            include __DIR__.'/components/sidebar.php'
+    ?>
+    <div id="main" class="ps-0 rounded-end visually-hidden">
+        <div class="wrapper">
+            <div class="main">
+                <?php 
+                        include __DIR__.'/components/header.php'
+                ?>
             <main class="content px-3 py-2">
                 <div class="container-fluid">
                     <div class="mb-3">
@@ -541,8 +457,8 @@ document.addEventListener('DOMContentLoaded', function () {
             </footer>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

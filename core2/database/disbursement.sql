@@ -26,14 +26,14 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `disbursement_tbl`
 --
-
+/*
 CREATE TABLE `disbursement_tbl` (
   `disbursement_id` int(11) NOT NULL,
   `loan_id` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `disbursementDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+*/
 --
 -- Dumping data for table `disbursement_tbl`
 --
