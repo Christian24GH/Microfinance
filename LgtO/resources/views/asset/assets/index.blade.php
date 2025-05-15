@@ -60,12 +60,12 @@
 </div>
 @endsection
 @section('content')
-<div class="container-fluid d-flex justify-content-end mb-1">
+<div class="container-fluid d-flex justify-content-end mb-1" >
     <div class="btn-group" role="group">
         <button id="deleteRow" class="btn btn-danger btn-sm">Delete</button>
     </div>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" style="min-height: 100vh">
     <table class="table table-sm align-middle table-bordered">
         <thead>
             <tr>

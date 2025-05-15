@@ -36,34 +36,33 @@ class Login extends Controller
         Cache::put("microfinance_cache_session:$sessionKey", $token, now()->addMinutes(60));
         
         switch($user->role){
-            case 'EMPLOYEE':
+
+            case 'Employee':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
                 break;
+                
             //Logistics 1
-            case 'MaintenanceAdmin':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
-                break;
-            case 'ProcurementAdministrator':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
-                break;
-            case 'AssetAdmin':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
-                break;
-            case 'ProjectManager':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
-                break;
+            case 'Maintenance Admin':
+            case 'Procurement Administrator':
+            case 'Asset Admin':
+            case 'Project Manager':
             case 'WarehouseManager':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
                 break;
-            case 'HRAdministrator':
+
+            //HR 2
+            case 'HR Administrator':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/hr2/hrms/Dashboard.php?sid=$sessionKey");
                 break;
-            case 'CommunicationOfficer':
+            //Core 2
+            case 'Communication Officer':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/core2/index.php?sid=$sessionKey");
                 break;
+            //Core 1
             case 'Loan Officer':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/core1/dashboard.php?sid=$sessionKey");
                 break;
+            //Financial
             case 'Finance Officer':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/financial/index.php?sid=$sessionKey");
                 break;

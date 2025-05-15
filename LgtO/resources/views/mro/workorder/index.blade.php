@@ -16,6 +16,7 @@
                 <div class="container">
                     <form id="storeWorkOrder" action="{{route('mro.workorder.store')}}" method="post">
                         @csrf
+                        <input type="hidden" name="created_by" value="{{$id}}">
                         <div class="row">
                             <div class="col mb-3">
                                 <label for="asset" class="form-label">Asset</label>
@@ -55,11 +56,7 @@
                         <div class="row">
                             <div class="col mb-3">
                                 <label for="location" class="form-label">Location</label>
-                                <select id="location" class="form-select" name="location" required>
-                                    <option value="">Select Here</option>
-                                    <option value="loc1">Office 1</option>
-                                    <option value="loc2">Office 2</option>
-                                </select>
+                                <input type="text" name="location" class="form-control">
                             </div>
                         </div>
                         <div class="row">
@@ -93,7 +90,7 @@
 @endsection
 
 @section('content_header')
-<div class="container-fluid border border-bottom-2 px-5 d-flex justify-content-between align-items-center" style="height:5rem">
+<div class="container-fluid border border-bottom-2 px-5 d-flex justify-content-between align-items-center" style="height:5rem" >
     <h3 class="py-5">Work Order</h3>
     <div>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addWork">Create Task</button>
@@ -101,7 +98,7 @@
 </div>
 @endsection
 @section('content_pagination')
-<nav class="pages ms-1 mt-1">
+<nav id="pagination" class="pages ms-1 mt-1">
     <div class="d-flex border-0 rounded-top-3">
         <div class="bg active"><a><p class="lato-bold m-0">Maintenance Works</p></a></div>
         <div class="bg"><a href="{{route('mro.task')}}"><p class="lato-bold m-0">Assign Tasks</p></a></div>
@@ -109,8 +106,8 @@
 </nav>
 @endsection
 @section('content')
-<div class="container-fluid">
-    <div class="px-2 table-responsive">
+<div class="container-fluid border" style="min-height: 100vh">
+    <div class="px-2">
         <table class="table align-middle">
             <thead>
                 <tr>
@@ -176,16 +173,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="location" class="form-select">
-                                <option value="loc1" 
-                                    {{($workOrder->location == 'loc1') ? 'selected' : ''}}>
-                                    Location 1
-                                </option>
-                                <option value="loc2" 
-                                    {{($workOrder->location == 'loc2') ? 'selected' : ''}}>
-                                    Location 2
-                                </option>
-                            </select>
+                            <input type="text" name="location" class="form-control" value="{{$workOrder->location}}">
                         </td>
                         <td>
                             <select name="status" class="form-select">

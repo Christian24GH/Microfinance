@@ -1,8 +1,8 @@
 @extends('layout.default')
 
 @section('content')
-<div class="container-fluid pt-2">
-    <div class="px-2 table-responsive">
+<div class="container-fluid pt-2" style="min-height: 100vh">
+    <div class="px-2">
         <table class="table align-middle">
             <thead>
                 <tr>

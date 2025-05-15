@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use SweetAlert2\Laravel\Swal;
@@ -27,6 +28,7 @@ class WorkOrders extends Controller
 
     public function store(Request $request){
         $validated = $request->validate([
+            'created_by' => 'required|exists:accounts,id',
             'startdate' => 'required',
             'priority'=> 'required',
             'maintenance_type'=> 'required',
@@ -43,6 +45,7 @@ class WorkOrders extends Controller
             ]);
             DB::table('work_orders')->insert([
                 'priority'=>$validated['priority'],
+                'created_by'=>$validated['created_by'],
                 'description'=>$request->input('description'),
                 'maintenance_type'=>$validated['maintenance_type'],
                 'location'=>$validated['location'],
@@ -142,7 +145,14 @@ class WorkOrders extends Controller
         //dd($technicians);
         DB::transaction(function () use ($request, $technicians){
             DB::table('maintenance')->where('work_order_id', $request->workid)->delete();
+            $status = DB::table('work_orders')->where('id', $request->workid)->select('status')->first();
+            //dd($status);
             if(empty($technicians)){
+                if($status->status == 'in_progress'){
+                    DB::table('work_orders')->where('id', $request->workid)->update([
+                        'status' => 'pending'
+                    ]);
+                }
                 return;
             }
             foreach($technicians as $technician){
@@ -151,6 +161,13 @@ class WorkOrders extends Controller
                     'technicians_id'=>$technician,
                 ]);
             };
+            
+            if($status->status == 'pending'){
+                DB::table('work_orders')->where('id', $request->workid)->update([
+                    'status' => 'in_progress'
+                ]);
+            }
+
         });
         Swal::fire([
             'title' => 'Record Updated!',
@@ -165,14 +182,12 @@ class WorkOrders extends Controller
         $viewdata = $this->init();
         $viewdata += ['pageTitle'=>'Tasks',];
         $workOrders = DB::table('work_orders')
-            ->where('status', 'pending')
+            ->whereIn('status', ['pending', 'in_progress'])
             ->get();
 
         $assets = DB::table('assets')->get();
         //$maintenance = DB::table('maintenance')->get();
-        $technicians = DB::table('technicians')
-            ->join('accounts', 'accounts.id', '=', 'technicians.account_id')
-            ->get(['technicians.*', 'accounts.fullname']);
+        $technicians = DB::table('accounts')->where('role', 'Technicians')->get();
         
         return view("mro.workorder.task", $viewdata)
             ->with('workOrders', $workOrders)
@@ -181,15 +196,12 @@ class WorkOrders extends Controller
     }
 
     public function getTechnicians($id){
-        $all = DB::table('technicians')
-            ->join('accounts', 'accounts.id', '=', 'technicians.account_id')
-            ->get(['technicians.*', 'accounts.fullname']);
+        $all = DB::table('accounts')->where('role', 'Technician')->get();
 
-        $assigned = DB::table('maintenance', 'm')
-            ->where('work_order_id', $id)
-            ->rightJoin('technicians as t', 't.id', '=', 'm.technicians_id')
-            ->join('accounts as a', 'a.id', '=', 't.account_id')
-            ->select(['m.*', 't.status', 'a.fullname'])
+        $assigned = DB::table('maintenance as m')
+            ->where('m.work_order_id', $id)
+            ->rightJoin('accounts as a', 'a.id', '=', 'm.technicians_id')
+            ->select(['m.*', 'a.fullname', 'a.role'])
             ->get();
         
         

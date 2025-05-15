@@ -1,6 +1,6 @@
 @extends('layout.default')
 @section('content_pagination')
-<nav class="pages ms-1 mt-1">
+<nav id="pagination" class="pages ms-1 mt-1">
     <div class="d-flex border-0 rounded-top-3">
         <div class="bg "><a  href="{{route('mro.workorder.index')}}"><p class="lato-bold m-0">Maintenance Works</p></a></div>
         <div class="bg active"><a><p class="lato-bold m-0">Assign Tasks</p></a></div>
@@ -35,8 +35,8 @@
   </div>
 </div>
 
-<div class="container-fluid">
-    <div class="px-2 table-responsive">
+<div class="container-fluid" style="min-height: 100vh">
+    <div class="px-2">
         <table class="table align-middle">
             <thead>
                 <tr>

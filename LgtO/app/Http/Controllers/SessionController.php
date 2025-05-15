@@ -29,19 +29,19 @@ class SessionController extends Controller
         //stores to session for later use
         session(['user'=>$currentUser, 'token'=>$token, 'sid' =>$sid]);
         switch(session('user')->role){
-            case 'MaintenanceAdmin':
+            case 'Maintenance Admin':
                 return redirect()->route("mro.dashboard");
 
-            case 'ProcurementAdministrator':
+            case 'Procurement Administrator':
                 return redirect()->route("prc.dashboard.index");
 
-            case 'AssetAdmin':
+            case 'Asset Admin':
                 return redirect()->route("asset.dashboard.index");
 
-            case 'ProjectManager':
+            case 'Project Manager':
                 return redirect()->route("pm.dashboard.index");
             
-            case 'WarehouseManager':
+            case 'Warehouse Manager':
                 return redirect()->route("wrh.dashboard.index");
         }
     }

@@ -10,16 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('technicians', function (Blueprint $table) {
-            $table->id();
-            $table->string('phone', 11)->nullable();
-            $table->string('specialty', 255);
-            $table->enum('status', ['active', 'inactive']);
-            $table->unsignedBigInteger('account_id', false);
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-        });
-        
+    {        
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->date('maintenance_date');
@@ -27,6 +18,7 @@ return new class extends Migration
 
         Schema::create('work_orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('created_by');
             $table->enum('priority', ['low', 'medium', 'high']);
             $table->string('description', 50)->nullable();
             $table->enum('maintenance_type', ['preventive', 'corrective']);
@@ -39,6 +31,7 @@ return new class extends Migration
             $table->unsignedBigInteger('schedule_id', false);
             $table->foreign('asset_id')->references('id')->on('assets')->onDelete('cascade');
             $table->foreign('schedule_id')->references('id')->on('schedules')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('accounts')->onDelete('cascade');
         });
 
         Schema::create('maintenance', function (Blueprint $table) {
@@ -52,7 +45,7 @@ return new class extends Migration
 
             $table->foreign('technicians_id')
                 ->references('id')
-                ->on('technicians');
+                ->on('accounts');
         });
 
         Schema::create('parts_inventory', function (Blueprint $table) {
@@ -71,9 +64,7 @@ return new class extends Migration
         Schema::create('maintenance_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('maintenance_id');
-            $table->enum('status', ['pending', 'in_progress', 'completed', 'cancelled']);
-            $table->decimal('duration_hours', 5, 2)->nullable();
-            $table->date('log_date');
+            $table->string('description');
             $table->timestamps();
 
             $table->foreign('maintenance_id')->references('id')->on('maintenance')->onDelete('cascade');
@@ -102,7 +93,5 @@ return new class extends Migration
         Schema::dropIfExists('maintenance');
         Schema::dropIfExists('work_orders');
         Schema::dropIfExists('schedules');
-        Schema::dropIfExists('assets');
-        Schema::dropIfExists('technicians');
     }
 };

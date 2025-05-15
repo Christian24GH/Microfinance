@@ -7,31 +7,25 @@ abstract class Controller
     public function init(){
         $user = session()->get('user');
         $role = $user->role;
-        $roleFormat = '';
         $title = '';
         switch($role){
-            case 'MaintenanceAdmin':
-                $roleFormat = 'Maintenance Admin';
+            case 'Maintenance Admin':
                 $title = 'Maintenance Repair and Overhaul';
                 break;
-            case 'ProcurementAdministrator':
-                $roleFormat = 'Procurement Administrator';
+            case 'Procurement Administrator':
                 $title = 'Procurement';
                 break;
-            case 'ProjectManager':
-                $roleFormat = 'Project Manager';
+            case 'Project Manager':
                 $title = 'Project Management';
                 break;
-            case 'AssetAdmin':
-                $roleFormat = 'Asset Admin';
+            case 'Asset Admin':
                 $title = 'Asset Management';
                 break;
-            case 'WarehouseManager':
-                $roleFormat = 'Warehouse Manager';
+            case 'Warehouse Manager':
                 $title = 'Warehousing';
                 break;
             default:
-                $roleFormat = '';
+                $role = '';
                 $title = '';
                 break;
         }
@@ -40,7 +34,7 @@ abstract class Controller
             'id' => $user->id,
             'fullname'=> $user->fullname,
             'email'=> $user->email,
-            'role'=>$roleFormat
+            'role'=>$role
         ];
         return $viewdata;
     }

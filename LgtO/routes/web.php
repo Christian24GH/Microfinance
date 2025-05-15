@@ -47,6 +47,7 @@ Route::middleware([ValidSession::class])->prefix('/mro')->group(function ()
 
     #Assigned Tasks for Technicians
     Route::get('/assignment', [AssignmentController::class, 'index'])->name('mro.assignment.index');
+    Route::post('/assignment/reportgen', [AssignmentController::class, 'reportgen'])->name('mro.assignment.reportgen');
 });
 
 Route::middleware([ValidSession::class])->prefix('/procurement')->group(function () {
