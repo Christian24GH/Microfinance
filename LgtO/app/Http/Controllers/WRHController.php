@@ -21,6 +21,7 @@ class WRHController extends Controller
         $viewdata = $this->init();
         $viewdata += [
             'pageTitle' => 'Inventory Management'
+            
         ];
         
         $inventory = DB::table('inventory')

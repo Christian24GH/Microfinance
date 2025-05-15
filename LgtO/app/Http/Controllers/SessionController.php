@@ -36,7 +36,7 @@ class SessionController extends Controller
                 return redirect()->route("prc.dashboard.index");
 
             case 'AssetAdmin':
-                return redirect()->route("ast.dashboard.index");
+                return redirect()->route("asset.dashboard.index");
 
             case 'ProjectManager':
                 return redirect()->route("pm.dashboard.index");

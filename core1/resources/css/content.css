@@ -1,0 +1,193 @@
+.dashboard-content {
+    padding: 20px;
+  }
+  .info-section {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .info-section h3 {
+    margin-bottom: 10px;
+    color: #000000;
+  }
+  .info-section p {
+    margin: 5px 0;
+    color: #000000;
+  }
+  
+  .home-section{
+    position: relative;
+    background: #e8eaf0;
+    min-height: 100vh;
+    top: 0;
+    transition: all 0.5s ease;
+    z-index: 2;
+  }
+  .home-section .text{
+    display: inline-block;
+    color: #11101d;
+    font-size: 25px;
+    font-weight: 500;
+    margin: 18px
+  }
+
+
+  table {
+      border-collapse: separate;
+      text-indent: initial;
+      border-spacing: 2px;
+  }
+  .users-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+  .users-table th {
+      background-color: #f2f2f2;
+      color: #000000;
+      padding: 10px;
+      text-align: left;
+  }
+  .users-table th, .users-table td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+  }
+  
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  .column {
+    float: left;
+    width: 25%;
+    padding: 10px;
+  }
+  
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  } 
+  
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+      display: block;
+      margin-bottom: 20px;
+    }
+  }
+
+
+  .input-group {
+    margin: auto;
+    width: 100%;
+    position: relative;
+    height: 75px;
+    overflow: hidden;
+    text-transform: uppercase;
+    color: #000000;
+}
+
+.input-group input {
+    width: 100%;
+    height: 100%;
+    color: #000000;
+    font-size: 20px;
+    padding-top: 25px;
+    border: none;
+    background: transparent;
+}
+.input-group label {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    pointer-events: none;
+    border-bottom: 1px solid rgb(0, 0, 0);
+}
+.input-group select {
+    width: 100%;
+    color: #000000;
+    font-size: 20px;
+    padding-top: 25px;
+    border: none;
+    background: transparent;
+}
+.input-group label::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    border-bottom: 3px solid #000000;
+    transform: translateX(-100%);
+    transition: all 0.3s ease;
+}
+
+.content-name {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
+}
+.input-group input:focus {
+    outline: none;
+}
+.input-group input:focus + .label-name .content-name,
+.input-group input:valid + .label-name .content-name {
+    transform: translateY(-125%);
+    font-size: 18px;
+    left: 0px;
+    color: #000000;
+}
+.input-group input:focus + .label-name::after,
+.input-group input:valid + .label-name::after {
+    transform: translateX(0%);
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+}
+.button-group button {
+    background-color: #11101D;
+    color: #ffffff;
+    border: none;
+    margin: 5px; /* Adjust spacing between buttons */
+    padding: 10px;
+    width: 50%; /* Set button width */
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.button-group button:hover {
+    background-color: #36617e;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
+a:hover {
+    color: #36617e;
+    font-weight: bold;
+    text-decoration: underline;
+}

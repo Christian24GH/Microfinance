@@ -39,7 +39,6 @@ class Login extends Controller
             case 'EMPLOYEE':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
                 break;
-
             //Logistics 1
             case 'MaintenanceAdmin':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
@@ -62,7 +61,16 @@ class Login extends Controller
             case 'CommunicationOfficer':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/core2/index.php?sid=$sessionKey");
                 break;
-            
+            case 'Loan Officer':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/core1/dashboard.php?sid=$sessionKey");
+                break;
+            case 'Finance Officer':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/financial/index.php?sid=$sessionKey");
+                break;
+
+            case 'Client':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
+                break;
             default:
                 return back()->with(['fail' =>'Invalid Role']);
                 break;

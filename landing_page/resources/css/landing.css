@@ -19,11 +19,6 @@
     opacity: 1;
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
 body {
     margin: 0;
     font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -48,23 +43,44 @@ nav .offcanvas{
 }
 main{
     flex:1;
+    position: relative;
 }
-.hero::after{
+#heroSection{
+    position:relative
+}
+#heroSection::before{
     content: '';
-    position: absolute;
-    background-color: var(--mfc4);
-    width: 100%;
+    position:absolute;
     height: 100%;
-    top: 0;
-    left: 0;
-    clip-path: polygon(77% 0, 100% 0, 100% 100%, 0 100%, 60% 76%);
-    z-index: -10;
+    width: 100%;
+    z-index: -999;
+    background-color: var(--mfc4);
+    clip-path: circle(67.2% at 96% 50%);
+    border-radius: calc(1rem * 1.5);
 }
 
-.hero {
-    background-color: transparent;
+#pictureCon{
+    position: relative;
+}
+#pictureCon img{
+    position:absolute;
+    aspect-ratio: 1/1;
+}
+#pictureCon img#img1{
+    width: 25vw;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+#pictureCon img#img2{
+    width: 15vw;
+    bottom:-10%;
+    left:30%;
+    transform: translate(-50%,-50%);
+}
+.hero, .about, .services {
     color: var(--mfc6);
-    padding: 4em 2em;
+    height: calc((100vh - 7vh) - 10vh);
 }
 
 .hero h2 {
@@ -85,6 +101,14 @@ main{
 
 .hero a, .hero a:hover{
     background-color: var(--mfc3);
+    color: white;
+}
+.applyNow{
+    background-color: var(--mfc3) !important;
+    color: white;
+}
+.applyNow:hover{
+    background-color: var(--mfc6) !important;
     color: white;
 }
 /* Footer */

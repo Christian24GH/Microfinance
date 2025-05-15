@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: var(--mfc6);
+    overflow-x: hidden;
+}
+
+form .btn, form .btn:hover
+{
+    background-color: var(--mfc6);
+    color: white;
+}
+
+html, body {
+    height: auto;
+    overflow-y: scroll;
+} 

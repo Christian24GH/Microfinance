@@ -7,7 +7,7 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
+    
     <form action="" method="POST" class="card p-4 mb-4 shadow-sm">
         @csrf
 
@@ -17,7 +17,6 @@
                 <option value="">-- Select Shipment --</option>
                 @php
                     $shipments = DB::table('shipment')->get();
-                    return $shipments
                 @endphp
                 @foreach($shipments as $shipment)
                     <option value="{{ $shipment->shipment_id }}">{{ $shipment->tracking_no }}</option>
@@ -29,6 +28,9 @@
             <label for="warehouse_id" class="form-label">Warehouse</label>
             <select name="warehouse_id" id="warehouse_id" class="form-select" required>
                 <option value="">-- Select Warehouse --</option>
+                @php
+                    $warehouse = DB::table('warehouse')->get();
+                @endphp
                 @foreach($warehouse as $warehouse)
                     <option value="{{ $warehouse->warehouse_id }}">{{ $warehouse->name }}</option>
                 @endforeach

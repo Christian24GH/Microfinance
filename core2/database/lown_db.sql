@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `client_document`
 --
-
+DROP TABLE IF EXISTS `client_document`;
 CREATE TABLE `client_document` (
   `client_doc_id` int(11) NOT NULL,
   `doc_name` varchar(255) DEFAULT NULL,
@@ -50,7 +50,7 @@ INSERT INTO `client_document` (`client_doc_id`, `doc_name`, `doc_type`, `client_
 --
 -- Table structure for table `client_employment`
 --
-
+DROP TABLE IF EXISTS `client_employment`;
 CREATE TABLE `client_employment` (
   `client_emp_id` int(11) NOT NULL,
   `employer_name` varchar(255) DEFAULT NULL,
@@ -75,7 +75,7 @@ INSERT INTO `client_employment` (`client_emp_id`, `employer_name`, `address`, `p
 --
 -- Table structure for table `client_financial_info`
 --
-
+DROP TABLE IF EXISTS `client_financial_info`;
 CREATE TABLE `client_financial_info` (
   `client_fin_info` int(11) NOT NULL,
   `source_of_funds` varchar(255) DEFAULT NULL,
@@ -99,7 +99,7 @@ INSERT INTO `client_financial_info` (`client_fin_info`, `source_of_funds`, `mont
 --
 -- Table structure for table `client_info`
 --
-
+DROP TABLE IF EXISTS `client_info`;
 CREATE TABLE `client_info` (
   `client_id` int(11) NOT NULL,
   `firstname` varchar(255) DEFAULT NULL,
@@ -129,7 +129,7 @@ INSERT INTO `client_info` (`client_id`, `firstname`, `middlename`, `lastname`, `
 --
 -- Table structure for table `client_references`
 --
-
+DROP TABLE IF EXISTS `client_references`;
 CREATE TABLE `client_references` (
   `client_ref_id` int(11) NOT NULL,
   `firstname` varchar(255) DEFAULT NULL,
@@ -155,7 +155,7 @@ INSERT INTO `client_references` (`client_ref_id`, `firstname`, `lastname`, `rela
 --
 -- Table structure for table `disbursement_tbl`
 --
-
+DROP TABLE IF EXISTS `disbursement_tbl`;
 CREATE TABLE `disbursement_tbl` (
   `disbursement_id` int(11) NOT NULL,
   `loan_id` int(11) NOT NULL,
@@ -181,7 +181,7 @@ INSERT INTO `disbursement_tbl` (`disbursement_id`, `loan_id`, `amount`, `disburs
 --
 -- Table structure for table `disb_repayment_tbl`
 --
-
+DROP TABLE IF EXISTS `disb_repayment_tbl`;
 CREATE TABLE `disb_repayment_tbl` (
   `repayment_id` int(11) NOT NULL,
   `loan_id` int(11) NOT NULL,
@@ -208,7 +208,7 @@ INSERT INTO `disb_repayment_tbl` (`repayment_id`, `loan_id`, `amountPaid`, `repa
 --
 -- Table structure for table `email_logs`
 --
-
+DROP TABLE IF EXISTS `email_logs`;
 CREATE TABLE `email_logs` (
   `log_id` int(11) NOT NULL,
   `recipient_email` varchar(255) NOT NULL,
@@ -308,7 +308,7 @@ INSERT INTO `email_logs` (`log_id`, `recipient_email`, `subject`, `message`, `se
 --
 -- Table structure for table `loan_info`
 --
-
+DROP TABLE IF EXISTS `loan_info`;
 CREATE TABLE `loan_info` (
   `loan_id` int(11) NOT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
@@ -334,7 +334,7 @@ INSERT INTO `loan_info` (`loan_id`, `amount`, `month`, `terms`, `purpose`, `clie
 --
 -- Table structure for table `savings_tracking`
 --
-
+DROP TABLE IF EXISTS `savings_tracking`;
 CREATE TABLE `savings_tracking` (
   `id` int(11) NOT NULL,
   `client_name` varchar(100) NOT NULL,
