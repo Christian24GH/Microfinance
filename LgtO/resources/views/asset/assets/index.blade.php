@@ -58,11 +58,175 @@
     </div>
   </div>
 </div>
+
+<!-- Add Procurement Modal -->
+<div class="modal fade" id="procurementRequestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="requestModalLabel">New Request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <form action="{{route('prc.request.store')}}" method="post">
+        @csrf
+        <div class="modal-body">
+            <input type="hidden" class="form-control" name="requested_by" value="{{$id}}" required>
+
+            <div class="mb-3">
+                <label for="subject" class="form-label">Subject</label>
+                <input type="text" class="form-control" id="subject" name="subject" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="subjectType" class="form-label">Subject Type</label>
+                <select type="text" class="form-select" name="subject_type" required>
+                    <option value="Service" > Service</option>
+                    <option value="Asset" > Asset</option>
+                </select>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Quantity</span>
+                        <input type="number" class="form-control" name="quantity" min="1" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Unit</span>
+                        <input type="text" class="form-control" name="unit" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="dueDate" class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="dueDate" name="dueDate" required>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Add Maintenance Modal -->
+<div class="modal fade" id="addWork" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Maintenace Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if(!isset($assets))
+                    <div class="alert alert-secondary" role="alert">
+                        No Assets Available.
+                    </div>
+                @else
+                <div class="container">
+                    <form id="storeWorkOrder" action="{{route('mro.workorder.store')}}" method="post">
+                        @csrf
+                        <input type="hidden" name="created_by" value="{{$id}}">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="asset" class="form-label">Asset</label>
+                                <select id="asset" class="form-select" name="asset" required>
+                                    <option value="">Select Here</option>
+                                    @foreach($assets as $asset)
+                                    <option value="{{$asset->id}}">{{$asset->asset_tag}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col mb-3">
+                                <label for="priority" class="form-label">Priority</label>
+                                <select id="priority" class="form-select" name="priority" required>
+                                    <option value="">Select Here</option>
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea name="description" id="description" class="form-control"  placeholder="Type here"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="maintenance_type" class="form-label">Maintenance Type</label>
+                                <select id="maintenance_type" class="form-select" name="maintenance_type" required>
+                                    <option value="">Select Here</option>
+                                    <option value="preventive">Preventive</option>
+                                    <option value="corrective">Corrective</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" name="location" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" class="form-select" name="status" required>
+                                    <option value="">Select Here</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="cancelled">Cancelled</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                            <div class="col mb-3">
+                                <label for="startdate" class="form-label">Start Date</label>
+                                <input id="startdate" type="date" class="form-control" name="startdate" required/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                @endif 
+                <div class="container d-flex justify-content-center align-items-center gap-3">
+                    
+                    <button type="submit" class="btn btn-primary" onclick="document.getElementById('storeWorkOrder').requestSubmit()" style="min-width: 10rem;"><b>Add Maintenance</b></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width: 10rem;"><b>Cancel</b></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 @section('content')
-<div class="container-fluid d-flex justify-content-end mb-1" >
-    <div class="btn-group" role="group">
-        <button id="deleteRow" class="btn btn-danger btn-sm">Delete</button>
+<div class="container-fluid d-flex mb-1" >
+    <div class="border rounded-2 w-100 hstack justify-content-between" style="background-color:white">
+      <div class="d-flex gap-2" role="group">
+          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAssetModal">
+                  Add New Asset
+          </button>
+          <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#procurementRequestModal">Write Procurement Request</button>
+          <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addWork">Write Maintenance Request</button>
+      </div>
+      <div class="btn-group" role="group">
+          <button id="deleteRow" class="btn btn-danger btn-sm">Delete</button>
+      </div>
     </div>
 </div>
 <div class="container-fluid" style="min-height: 100vh">
@@ -75,6 +239,7 @@
                 <th>Category</th>
                 <th>Status</th>
                 <th>Purchase Date</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>

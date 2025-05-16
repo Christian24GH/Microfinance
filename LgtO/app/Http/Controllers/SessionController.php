@@ -29,6 +29,8 @@ class SessionController extends Controller
         //stores to session for later use
         session(['user'=>$currentUser, 'token'=>$token, 'sid' =>$sid]);
         switch(session('user')->role){
+            case 'Technician':
+                return redirect()->route("mro.assignment.index");
             case 'Maintenance Admin':
                 return redirect()->route("mro.dashboard");
 

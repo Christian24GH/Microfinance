@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use SweetAlert2\Laravel\Swal;
 
 class PRCAcquisitionController extends Controller
 {
@@ -14,7 +16,7 @@ class PRCAcquisitionController extends Controller
             'hasBtn' => 'procurementRequestModal'
         ];
 
-        $request = DB::table('procurement_requests')->get();
+        $request = DB::table('procurement_requests')->where('status', 'Pending')->get();
         return view('procurement.procurement.phase-one.request-management', $viewdata)
             ->with('requests', $request);
     }
@@ -44,6 +46,11 @@ class PRCAcquisitionController extends Controller
                 'updated_at'=>now()
             ]);
         });
+        Swal::fire([
+            'title' => 'Procurement Request Submitted',
+            'icon' => 'success',
+            'confirmButtonText' => 'Ok'
+        ]);
         return back();
     }
 
@@ -71,6 +78,9 @@ class PRCAcquisitionController extends Controller
                         'due_date'=>$validated['dueDate'],
                         'updated_at'=>now()
                 ]);
+                if($validated['status'] == 'Approved'){
+                    Http::get('http://localhost/dashboard/Microfinance/LgtO/public/api/vendor/approved_procurement/store');
+                }
             });
         }catch(\Exception $e){
             dd($e);

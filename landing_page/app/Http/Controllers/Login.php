@@ -43,6 +43,7 @@ class Login extends Controller
                 
             //Logistics 1
             case 'Maintenance Admin':
+            case 'Technician':
             case 'Procurement Administrator':
             case 'Asset Admin':
             case 'Project Manager':

@@ -28,9 +28,7 @@
             </div>
             @break
             @case('addAssetModal')
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssetModal">
-                Add New Asset
-            </button>
+            
             @break
         @endswitch
     @endisset

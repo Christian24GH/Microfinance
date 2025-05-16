@@ -112,6 +112,18 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'logistic_pgsql' => [
+            'driver'   => 'pgsql',
+            'host'     => 'dpg-d0e74ch5pdvs73aqmnr0-a.oregon-postgres.render.com',
+            'port'     => '5432',
+            'database' => 'logistic2',
+            'username' => 'logistic2_user',
+            'password' => 'RnOMkUBoAX06KJ7crw3mBgl68pN3ISyf',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+            'sslmode'  => 'require',
+        ],
     ],
 
     /*

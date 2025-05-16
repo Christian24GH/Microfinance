@@ -16,6 +16,11 @@
         <p class="px-4 lato-bold">General</p>
         <div class="navs px-4 d-flex flex-column gap-1 align-items-center justify-content-center position-relative">
         @switch($role)
+            @case("Technician")
+                <div class="py-3 hstack nav-item  {{ request()->routeIs('mro.assignment.index') ? 'active' : '' }}">
+                    <a class="nunito-nav" href="{{ route('mro.assignment.index') }}">Assigned Tasks</a>
+                </div>
+            @break
             @case("Maintenance Admin")
                 <div class="py-3 hstack nav-item {{ request()->routeIs('mro.dashboard') ? 'active' : ''}}" >
                     <a class="nunito-nav" href="{{route('mro.dashboard')}}" >Dashboard</a>
@@ -24,11 +29,7 @@
                 <div class="py-3 hstack nav-item {{ request()->routeIs('mro.workorder.index') || request()->routeIs('mro.task')  ? 'active' : ''}}">
                     <a class="nunito-nav" href="{{ route('mro.workorder.index') }}" >Work Orders</a>
                 </div>
-    
-                <div class="py-3 hstack nav-item  {{ request()->routeIs('mro.assignment.index') ? 'active' : '' }}">
-                    <a class="nunito-nav" href="{{ route('mro.assignment.index') }}">Assigned Tasks</a>
-                </div>
-    
+                
                 <div class="py-3 hstack nav-item {{ request()->routeIs('mro.logs') ? 'active' : ''}}">
                     <a class="nunito-nav" href="{{ route('mro.logs') }}" >Logs</a>
                 </div>

@@ -9,6 +9,7 @@ abstract class Controller
         $role = $user->role;
         $title = '';
         switch($role){
+            case 'Technician':
             case 'Maintenance Admin':
                 $title = 'Maintenance Repair and Overhaul';
                 break;

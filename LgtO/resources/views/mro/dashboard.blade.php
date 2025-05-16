@@ -13,9 +13,9 @@
         <div class="col-auto">
             <div class="card" style="width: 18rem;">
                 <div class="card-body ">
-                    <h5 class="card-title text-dark-emphasis">Requests</h5>
+                    <h5 class="card-title text-dark-emphasis">New Requests</h5>
                     <p class="card-text text-center my-2 lato-light text-dark-emphasis" style="font-size: 2rem; ">{{$Requests}}</p>
-                    <a href="#" class="btn" style="background-color: var(--mfc4);">View Tasks</a>
+                    <a href="{{route('mro.workorder.index')}}" class="btn" style="background-color: var(--mfc4);">View Tasks</a>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                     <p class="card-text text-center my-2 lato-light text-dark-emphasis"
                         style="font-size: 2rem; ">
                         {{$Logs}} <small class="lato-light" style="font-size:medium;"> new logs</small></p>
-                    <a href="#" class="btn" style="background-color: var(--mfc4);">View Tasks</a>
+                    <a href="{{route('mro.logs')}}" class="btn" style="background-color: var(--mfc4);">View Tasks</a>
                 </div>
             </div>
         </div>

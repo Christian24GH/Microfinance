@@ -74,7 +74,7 @@
 </nav>
 @endsection
 @section('content')
-<div class="container-fluid border py-2">
+<div class="container-fluid border py-2" style="min-height: 100vh">
     <h6 class="mb-0">List of Acquistion Request</h6>
     <table class="table align-middle">
         <thead>
@@ -120,8 +120,8 @@
                         <select name="status" class="form-select form-select-sm">
                             <option value="Approved" {{$request->status === 'Approved' ? 'selected' : ''}}> Approved</option>
                             <option value="Rejected" {{$request->status === 'Rejected' ? 'selected' : ''}}> Rejected</option>
-                            <option value="Pending" {{$request->status === 'Pending' ? 'selected' : ''}}> Pending</option>
-                            <option value="Fulfilled" {{$request->status === 'Fulfilled' ? 'selected' : ''}}> Fulfilled</option>
+                            <option value="Pending" disabled {{$request->status === 'Pending' ? 'selected' : ''}} > Pending</option>
+                            <option value="Fulfilled" disabled  {{$request->status === 'Fulfilled' ? 'selected' : ''}}> Fulfilled</option>
                         </select>
                     </td>
                     <td>

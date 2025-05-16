@@ -8,7 +8,7 @@
 </nav>
 @endsection
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid" style="min-height: 100vh">
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

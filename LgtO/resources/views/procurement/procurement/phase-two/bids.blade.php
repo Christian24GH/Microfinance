@@ -8,7 +8,7 @@
 </nav>
 @endsection
 @section('content')
-<div class="container-fluid border py-3">
+<div class="container-fluid border py-3" style="min-height: 100vh">
     
     <div class="container list-group gap-2 overflow-y-scroll"  style="height: 80vh">
         <h6 class="mb-1">List of Available Bidding</h6>
