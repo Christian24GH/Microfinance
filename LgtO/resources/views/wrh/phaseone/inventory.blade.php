@@ -7,17 +7,22 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-    
-    <form action="" method="POST" class="card p-4 mb-4 shadow-sm">
+    @if ($errors->any())
+        <div class="alert alert-warning" role="alert">
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        </div>
+    @endif
+    <form action="{{ route('inventory.store') }}" method="POST" class="card p-4 mb-4 shadow-sm">
         @csrf
-
+        @php
+            $shipments = DB::table('shipment')->get();
+        @endphp
         <div class="mb-3">
             <label for="shipment_id" class="form-label">Shipment</label>
             <select name="shipment_id" id="shipment_id" class="form-select" required>
                 <option value="">-- Select Shipment --</option>
-                @php
-                    $shipments = DB::table('shipment')->get();
-                @endphp
                 @foreach($shipments as $shipment)
                     <option value="{{ $shipment->shipment_id }}">{{ $shipment->tracking_no }}</option>
                 @endforeach
@@ -26,12 +31,12 @@
 
         <div class="mb-3">
             <label for="warehouse_id" class="form-label">Warehouse</label>
+            @php
+                $warehouses = DB::table('warehouse')->get();
+            @endphp
             <select name="warehouse_id" id="warehouse_id" class="form-select" required>
                 <option value="">-- Select Warehouse --</option>
-                @php
-                    $warehouse = DB::table('warehouse')->get();
-                @endphp
-                @foreach($warehouse as $warehouse)
+                @foreach($warehouses as $warehouse)
                     <option value="{{ $warehouse->warehouse_id }}">{{ $warehouse->name }}</option>
                 @endforeach
             </select>

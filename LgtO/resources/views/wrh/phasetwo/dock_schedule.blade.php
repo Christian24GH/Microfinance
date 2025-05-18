@@ -7,8 +7,14 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
-    <form action="" method="POST" class="card p-4 mb-4 shadow-sm">
+    @if ($errors->any())
+        <div class="alert alert-warning" role="alert">
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        </div>
+    @endif
+    <form action="{{ route('dockschedule.store') }}" method="POST" class="card p-4 mb-4 shadow-sm">
         @csrf
 
         <div class="mb-3">

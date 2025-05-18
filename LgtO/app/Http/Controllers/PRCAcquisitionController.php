@@ -78,10 +78,10 @@ class PRCAcquisitionController extends Controller
                         'due_date'=>$validated['dueDate'],
                         'updated_at'=>now()
                 ]);
-                if($validated['status'] == 'Approved'){
-                    Http::get('http://localhost/dashboard/Microfinance/LgtO/public/api/vendor/approved_procurement/store');
-                }
             });
+            if($validated['status'] == 'Approved'){
+                Http::get('http://localhost/dashboard/Microfinance/LgtO/public/api/vendor/approved_procurement/store');
+            }
         }catch(\Exception $e){
             dd($e);
         }
@@ -101,54 +101,48 @@ class PRCAcquisitionController extends Controller
             
         ];
 
-        $bids = DB::table('procurement_bids', 'pb')
-            ->join('procurement_requests as pr', 'pr.id', '=', 'pb.prc_request_id')
-            ->join('vendors as v', 'v.id', '=', 'pb.supplier_id')
-            ->select(
-                'pb.id as PBID',
-                    'pb.agreement_text',
-                    'pb.offer_price',
-                    'pb.status',
-                    'pb.created_at',
-                'pr.id as PRID',
-                    'pr.request_number',
-                    'pr.subject',
-                    'pr.subject_type',
-                    'pr.quantity',
-                    'pr.unit',
-                    'pr.due_date',
-                'v.id as VID',
-                    'v.name',
-                    'v.contact'
-            )->where('pb.status', 'Pending')
-            ->get();
-        //dd($bids);
-        return view('procurement.procurement.phase-two.bids', $viewdata)->with('bids', $bids);
+        $bids = Http::get('http://localhost/dashboard/Microfinance/LgtO/public/api/vendor/vendor_offers');
+        
+        return view('procurement.procurement.phase-two.bids', $viewdata)->with('bids', collect($bids->json()));
     }
     public function bids_update(Request $request){
         //dd($request);
         $request->validate([
-            'procurement_bid_id' => 'required|integer|exists:procurement_bids,id',
-            'procurement_request_id' => 'required|integer|exists:procurement_bids,prc_request_id',
+            'procurement_bid_id' => 'required|integer',
+            'procurement_request_id' => 'required|integer',
         ]);
         DB::transaction(function()use($request){
             if($request->btn == 'accept'){
-                DB::table('procurement_bids')
+                DB::connection('logistic_pgsql')
+                    ->table('prc_vendor_offers')
                     ->where('id', $request->procurement_bid_id)
                     ->where('prc_request_id', $request->procurement_request_id)
-                    ->update(['status' => 'Accept',]);
+                    ->update(['status' => 'approved',]);
 
-                DB::table('procurement_bids')
+                DB::connection('logistic_pgsql')
+                    ->table('prc_vendor_offers')
                     ->where('id', '!=',$request->procurement_bid_id)
                     ->where('prc_request_id', $request->procurement_request_id)
-                    ->update(['status' => 'Cancel']);
+                    ->update(['status' => 'rejected']);
                 
-                $bidRow = DB::table('procurement_bids')->where('id', $request->procurement_bid_id)
-                    ->select('offer_price')
-                    ->first();
-                //dd($bidRow);
+                $bidRow = DB::connection('logistic_pgsql')
+                    ->table('prc_vendor_offers')
+                        ->where('id', $request->procurement_bid_id)
+                        ->select('offer_price', 'vendor_id')
+                        ->first();
+                
+                $vendor = $bidRow->vendor_id;
+
+                $row = DB::connection('logistic_pgsql')
+                    ->table('l2_vendor_history')
+                    ->insert([
+                        'vendor_id' => $vendor,
+                        'event_type' => 'Offer Accepted'
+                    ]);
+                
                 DB::table('procurement_invoices')->insert([
                     'prc_bid_id'     => $request->procurement_bid_id,
+                    'prc_approved_request_id' => $request->procurement_request_id,
                     'invoice_amount' => $bidRow->offer_price,
                     'invoice_date'   => now(),
                     'due_date'       => now()->addDays(15),
@@ -158,12 +152,16 @@ class PRCAcquisitionController extends Controller
                     'updated_at'     => now()
                 ]);
             }else{
-                DB::table('procurement_bids')
+
+                DB::connection('logistic_pgsql')
+                    ->table('prc_vendor_offers')
                     ->where('id', $request->procurement_bid_id)
                     ->where('prc_request_id', $request->procurement_request_id)
-                    ->update(['status' => 'Cancel']);
+                    ->update(['status' => 'rejected']);
+
             }
         });
+
         return back();
     }
 
@@ -172,29 +170,47 @@ class PRCAcquisitionController extends Controller
         $viewdata += [
             'pageTitle'=>'Bills and Receipt',
         ];
+        $invoices = DB::table("procurement_invoices")->get();
 
-        $invoices = DB::table('procurement_invoices as i')
-        ->join('procurement_bids as b', 'i.prc_bid_id', '=', 'b.id')
-        ->join('procurement_requests as r', 'b.prc_request_id', '=', 'r.id')
-        ->select(
-            'i.*',
-            'b.offer_price as bid_offer_price',
-            'b.agreement_text',
-            'b.status as bid_status',
-            'r.request_number',
-            'r.subject',
-            'r.description',
-            'r.subject_type',
-            'r.quantity',
-            'r.unit',
-            'r.due_date as request_due_date'
-        )
-        ->get();
-        //dd($invoices);
-        return view('procurement.procurement.phase-three.invoice', $viewdata)->with('invoices', $invoices);
+        $vendorOffers = DB::connection('logistic_pgsql')
+            ->table("prc_vendor_offers")
+            ->get()
+            ->keyBy('id');
+
+        $approvedRequests = DB::connection('logistic_pgsql')
+            ->table("prc_approved_requests")
+            ->get()
+            ->keyBy('id');
+
+        $results = $invoices->map(function ($invoice) use ($vendorOffers, $approvedRequests) {
+            $bid = $vendorOffers->get($invoice->prc_bid_id);
+            $request = $approvedRequests->get($invoice->prc_approved_request_id);
+
+            return (object) [
+                'id'              => $invoice->id,
+                'bid_offer_price'  => $bid?->offer_price,
+                'agreement_text'  => $bid?->agreement_text,
+                'bid_status'      => $bid?->status,
+                'request_number'  => $request?->request_number,
+                'subject'         => $request?->subject,
+                'description'     => $request?->description,
+                'subject_type'    => $request?->subject_type,
+                'quantity'        => $request?->quantity,
+                'unit'            => $request?->unit,
+                'request_due_date'=> $request?->due_date,
+                'payment_status'  => $invoice?->payment_status,
+                'invoice_status'  => $invoice?->invoice_status,
+                'invoice_amount'  => $invoice?->invoice_amount,
+                'invoice_date'  => $invoice?->created_at,
+                'due_date'  => $invoice?->due_date,
+            ];
+        });
+        //dd($results);
+        return view('procurement.procurement.phase-three.invoice', $viewdata)->with('invoices', $results);
     }
 
     public function invoice_update(Request $request, $id){
+
         $validated = $request->validate([
             'invoice_status' => 'required|in:Pending,Sent,Received,Approved,Disputed,Cancelled,Closed'
         ]);
@@ -207,6 +223,7 @@ class PRCAcquisitionController extends Controller
     }
 
     public function invoice_markAsPaid(Request $request, $id){
+        
         $invoice = DB::table('procurement_invoices')->where('id', $id)->first();
 
         if (!$invoice) {
@@ -236,51 +253,106 @@ class PRCAcquisitionController extends Controller
         return back()->with('success', 'Invoice marked as Paid and receipt generated.');
     }
 
+    
     public function receipts_index(){
         $viewdata = $this->init();
         $viewdata += [
             'pageTitle'=>'Bills and Receipt',
         ];
 
-        $receipts = DB::table('procurement_receipts as pr')
-            ->join('procurement_invoices as pi', 'pr.invoice_id', '=', 'pi.id')
-            ->join('procurement_bids as pb', 'pi.prc_bid_id', '=', 'pb.id')
-            ->join('procurement_requests as pq', 'pb.prc_request_id', '=', 'pq.id')
+        $receipts = DB::table('procurement_receipts as r')
+            ->join('procurement_invoices as i', 'r.invoice_id', '=', 'i.id')
             ->select(
-                'pr.id as receipt_id',
-                'pr.receipt_number',
-                'pr.payment_date',
-                'pr.amount',
-                'pi.invoice_amount',
-                'pi.invoice_date',
-                'pi.payment_status',
-                'pq.request_number',
-                'pq.subject',
-                'pb.offer_price'
-            )
-            ->orderBy('pr.created_at', 'desc')
-            ->get();
+                'r.*',
+                'r.receipt_number',
+                'i.invoice_amount',
+                'i.invoice_date',
+                'i.prc_bid_id',
+                'i.payment_status',
+                'i.prc_approved_request_id'
+            )->get();
+        //dd($receipts);
+        $vendorOffers = DB::connection('logistic_pgsql')
+            ->table("prc_vendor_offers")
+            ->get()
+            ->keyBy('id');
+
+        $approvedRequests = DB::connection('logistic_pgsql')
+            ->table("prc_approved_requests")
+            ->get()
+            ->keyBy('id');
+        
+        $result = $receipts->map(function($receipt) use($vendorOffers, $approvedRequests){
+            $bid = $vendorOffers->get($receipt->prc_bid_id);
+            $request = $approvedRequests->get($receipt->prc_approved_request_id);
+
+            return (object) [
+                'receipt_id' => $receipt?->id,
+                'receipt_number' => $receipt?->receipt_number,
+                'payment_date' => $receipt?->payment_date,
+                'amount' => $receipt?->amount,
+                'invoice_amount' => $receipt?->invoice_amount,
+                'invoice_date' => $receipt?->invoice_date,
+                'payment_status' => $receipt?->payment_status,
+                'request_number' => $request?->request_number,
+                'subject' => $request?->subject,
+                'offer_price' => $bid?->offer_price,
+            ];
+        });
+        //dd($result);
         return view('procurement.procurement.phase-three.receipts', $viewdata)
-            ->with('receipts', $receipts);
+            ->with('receipts', $result);
     }
 
     public function receipts_show($id)
     {
         $receipt = DB::table('procurement_receipts as r')
             ->join('procurement_invoices as i', 'r.invoice_id', '=', 'i.id')
-            ->join('procurement_bids as b', 'i.prc_bid_id', '=', 'b.id')
-            ->join('procurement_requests as p', 'b.prc_request_id', '=', 'p.id')
             ->select(
                 'r.*',
                 'i.invoice_number',
                 'i.invoice_amount',
-                'b.offer_price',
-                'p.request_number',
-                'p.subject',
-                'p.description'
             )
             ->where('r.id', $id)
             ->first();
+        dd($receipt);
+        $vendorOffers = DB::connection('logistic_pgsql')
+            ->table("prc_vendor_offers")
+            ->get()
+            ->keyBy('id');
+
+        $approvedRequests = DB::connection('logistic_pgsql')
+            ->table("prc_approved_requests")
+            ->get()
+            ->keyBy('id');
+        
+            /*
+        $results = $invoices->map(function($invoice) use($vendorOffers, $approvedRequests){
+            $bid = $vendorOffers->get($invoice->prc_bid_id);
+            $request = $approvedRequests->get($invoice->prc_approved_requests);
+
+            return (object) [
+                'id'              => $invoice->id,
+                'bid_offer_price'  => $bid?->offer_price,
+                'agreement_text'  => $bid?->agreement_text,
+                'bid_status'      => $bid?->status,
+                'request_number'  => $request?->request_number,
+                'subject'         => $request?->subject,
+                'description'     => $request?->description,
+                'subject_type'    => $request?->subject_type,
+                'quantity'        => $request?->quantity,
+                'unit'            => $request?->unit,
+                'request_due_date'=> $request?->due_date,
+                'payment_status'  => $invoice?->payment_status,
+                'invoice_number' => $invoice?->invoice_number,
+                'invoice_status'  => $invoice?->invoice_status,
+                'invoice_amount'  => $invoice?->invoice_amount,
+                'invoice_date'  => $invoice?->created_at,
+                'due_date'  => $invoice?->due_date,
+            ];
+        });
+        
+       */
 
         if (!$receipt) {
             return back()->with('error', 'Receipt not found.');

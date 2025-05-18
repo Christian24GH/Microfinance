@@ -8,7 +8,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <form action="" method="POST" class="card p-4 mb-4 shadow-sm">
+    <form action="{{ route('rfid_tag.store') }}" method="POST" class="card p-4 mb-4 shadow-sm">
         @csrf
 
         <div class="mb-3">

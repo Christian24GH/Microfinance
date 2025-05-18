@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in</title>
+    <link rel="icon" href="{{asset('img/1.4.png')}}"/>
     @vite(['resources/css/app.css', 'resources/css/register.css', 
         'resources/css/media-query.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="bg-light">
     <main class="position-relative vh-100">
+        <div class="container position-absolute top-0 start-0 " style="height: 7rem; width:fit-content">
+            <a href="{{route('landing')}}"><img src="{{asset('img/1.3.png')}}" alt="" style="width:100%; height:100%"></a>
+        </div>
         <div class="container card border position-absolute top-50 start-50 translate-middle p-5 authform">
             <div class="card-body" style="width: 30rem">
                 <h3 class="text-center">Welcome to {{ENV('APP_NAME')}}</h3>

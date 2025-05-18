@@ -87,6 +87,7 @@ Route::middleware([ValidSession::class])->prefix('/pm')->group(function () {
     Route::delete('/teams/{id}', [PMProjectTeamController::class, 'destroy'])->name('pm.teams.destroy');
 });
 
+/*
 Route::middleware([ValidSession::class])->prefix('/warehouse')->group(function () {
     //Dashboard
     Route::get('/dashboard', [WRHDashboard::class, 'index'])->name('wrh.dashboard.index');
@@ -102,6 +103,71 @@ Route::middleware([ValidSession::class])->prefix('/warehouse')->group(function (
     Route::get('/lastmile', [WRHController::class, 'lastmile_index'])->name('wrh.lastmile_delivery.index');
     Route::get('/rfid', [WRHController::class, 'rfid_index'])->name('wrh.rfid_tag.index');
     Route::get('/report', [WRHController::class, 'report_index'])->name('wrh.wrh_report.index');
+});
+*/
+Route::middleware([ValidSession::class])->prefix('/warehouse')->group(function () {
+    //Dashboard
+    Route::get('/dashboard', [WRHDashboard::class, 'index'])->name('wrh.dashboard.index');
+
+    // Warehouse
+    Route::get('/warehouse', [WRHController::class, 'warehouse_index'])->name('warehouse.index');
+    Route::post('/warehouse', [WRHController::class, 'warehouse_store'])->name('warehouse.store');
+    Route::put('/warehouse/{id}', [WRHController::class, 'warehouse_update'])->name('warehouse.update');
+    Route::delete('/warehouse/{id}', [WRHController::class, 'warehouse_destroy'])->name('warehouse.destroy');
+
+    // Inventory
+    Route::get('/inventory', [WRHController::class, 'inventory_index'])->name('wrh.inventory.index');
+    Route::post('/inventory', [WRHController::class, 'inventory_store'])->name('inventory.store');
+    Route::put('/inventory/{id}', [WRHController::class, 'inventory_update'])->name('inventory.update');
+    Route::delete('/inventory/{id}', [WRHController::class, 'inventory_destroy'])->name('inventory.destroy');
+
+    // Shipment
+    Route::get('/shipment', [WRHController::class, 'shipment_index'])->name('shipment.index');
+    Route::post('/shipment', [WRHController::class, 'shipment_store'])->name('shipment.store');
+    Route::put('/shipment/{id}', [WRHController::class, 'shipment_update'])->name('shipment.update');
+    Route::delete('/shipment/{id}', [WRHController::class, 'shipment_destroy'])->name('shipment.destroy');
+
+    // Orders
+    Route::get('/order', [WRHController::class, 'order_index'])->name('order.index');
+    Route::post('/order', [WRHController::class, 'order_store'])->name('order.store');
+    Route::put('/order/{id}', [WRHController::class, 'order_update'])->name('order.update');
+    Route::delete('/order/{id}', [WRHController::class, 'order_destroy'])->name('order.destroy');
+
+    // Dock Schedule
+    Route::get('/dock_schedule', [WRHController::class, 'dockschedule_index'])->name('dockschedule.index');
+    Route::post('/dock_schedule', [WRHController::class, 'dockschedule_store'])->name('dockschedule.store');
+    Route::put('/dock_schedule/{id}', [WRHController::class, 'dockschedule_update'])->name('dockschedule.update');
+    Route::delete('/dock_schedule/{id}', [WRHController::class, 'dockschedule_destroy'])->name('dockschedule.destroy');
+
+    // Supplier
+    Route::get('/supplier', [WRHController::class, 'supplier_index'])->name('supplier.index');
+    Route::post('/supplier', [WRHController::class, 'supplier_store'])->name('supplier.store');
+    Route::put('/supplier/{id}', [WRHController::class, 'supplier_update'])->name('supplier.update');
+    Route::delete('/supplier/{id}', [WRHController::class, 'supplier_destroy'])->name('supplier.destroy');
+
+    // Quality Check
+    Route::get('/quality_check', [WRHController::class, 'qualitycheck_index'])->name('qualitycheck.index');
+    Route::post('/quality_check', [WRHController::class, 'qualitycheck_store'])->name('qualitycheck.store');
+    Route::put('/quality_check/{id}', [WRHController::class, 'qualitycheck_update'])->name('qualitycheck.update');
+    Route::delete('/quality_check/{id}', [WRHController::class, 'qualitycheck_destroy'])->name('qualitycheck.destroy');
+
+    // Last Mile Delivery
+    Route::get('/lastmile_delivery', [WRHController::class, 'lastmile_index'])->name('lastmile.index');
+    Route::post('/lastmile_delivery', [WRHController::class, 'lastmile_store'])->name('lastmile.store');
+    Route::put('/lastmile_delivery/{id}', [WRHController::class, 'lastmile_update'])->name('lastmile.update');
+    Route::delete('/lastmile_delivery/{id}', [WRHController::class, 'lastmile_destroy'])->name('lastmile.destroy');
+
+    // RFID
+    Route::get('/rfid_tag', [WRHController::class, 'rfid_tag_index'])->name('rfid_tag.index');
+    Route::post('/rfid_tag', [WRHController::class, 'rfid_tag_store'])->name('rfid_tag.store');
+    Route::put('/rfid_tag/{id}', [WRHController::class, 'rfid_tag_update'])->name('rfid_tag.update');
+    Route::delete('/rfid_tag/{id}', [WRHController::class, 'rfid_tag_destroy'])->name('rfid_tag.destroy');
+
+    // Reports
+    Route::get('/wrh_report', [WRHController::class, 'wrh_report_index'])->name('wrh_report.index');
+    Route::post('/wrh_report', [WRHController::class, 'wrh_report_store'])->name('wrh_report.store');
+    Route::put('/wrh_report/{id}', [WRHController::class, 'wrh_report_update'])->name('wrh_report.update');
+    Route::delete('/wrh_report/{id}', [WRHController::class, 'wrh_report_destroy'])->name('wrh_report.destroy');
 });
 
 //Asset

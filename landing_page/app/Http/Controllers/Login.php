@@ -47,7 +47,7 @@ class Login extends Controller
             case 'Procurement Administrator':
             case 'Asset Admin':
             case 'Project Manager':
-            case 'WarehouseManager':
+            case 'Warehouse Manager':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
                 break;
 

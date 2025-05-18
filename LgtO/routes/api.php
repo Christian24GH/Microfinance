@@ -34,14 +34,7 @@ Route::post('/procurement/return_vendor', function(Request $request){
 Route::get('/vendor/approved_procurement/store', function(){
 
     $approved = DB::table('procurement_requests')->where('status', 'approved')->get();;
-    //dd($approved);
-
-    //approved_procurements = ['prc_request_id', 'supplier_id', 'offer_price', 'agreement_text'];
-    /*$result = DB::connection('logistic_pgsql')
-        ->select("SELECT column_name, data_type, is_nullable, character_maximum_length
-              FROM information_schema.columns
-              WHERE table_name = ''");
-    */
+    
     DB::transaction(function () use($approved){
         foreach($approved as $row){
             
@@ -65,8 +58,46 @@ Route::get('/vendor/approved_procurement/store', function(){
         }
     });
 
-    $tables = DB::connection('logistic_pgsql')
-        ->select("SELECT * FROM prc_approved_requests");
+    return;
+});
 
-    return $tables;
+
+Route::get('/vendor/vendor_offers', function(){
+    //prc_vendor_offers = id, request_number, vendor_id, agreement_text, offer_price, vendor_name, status
+    $prc_vendor_offers = DB::connection('logistic_pgsql')
+        ->table("prc_vendor_offers", 'pb')
+        ->join('prc_approved_requests as pr', 'pr.id', '=', 'pb.prc_request_id')
+        ->join('market_userinfo as v', 'v.id', '=', 'pb.vendor_id')
+        ->select(
+            'pb.id as PBID',
+                    'pb.agreement_text',
+                    'pb.offer_price',
+                    'pb.status',
+            'pr.id as PRID',
+                'pr.request_number',
+                'pr.subject',
+                'pr.subject_type',
+                'pr.quantity',
+                'pr.unit',
+                'pr.due_date',
+                'pr.created_at',
+            'v.id as vendor_id',
+                'v.name as vendor_name',
+                'v.email'
+        )->where('pb.status', 'pending')
+        ->get();
+    
+    return $prc_vendor_offers;
+});
+
+Route::post('/vendor/vendor_offers/status', function(Request $request){
+
+    DB::connection('logistic_pgsql')
+        ->table('prc_vendor_offers')
+        ->where('id', $request->row_id)
+        ->update([
+            'status' => $request->status
+        ]);
+
+    return;
 });

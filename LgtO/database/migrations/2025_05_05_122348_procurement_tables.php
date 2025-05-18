@@ -28,6 +28,7 @@ return new class extends Migration
             $table->foreign('requested_by')->references('id')->on('accounts');
         });
         
+        /*
         Schema::create('procurement_bids', function(Blueprint $table){
             $table->id();
             $table->unsignedBigInteger('supplier_id')->nullable();
@@ -47,11 +48,12 @@ return new class extends Migration
                 ->on('vendors')
                 ->onDelete('cascade');
         
-        });
+        });*/
 
         Schema::create('procurement_invoices', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('prc_bid_id');
+            $table->unsignedBigInteger('prc_approved_request_id');
             $table->decimal('invoice_amount', 10, 2);
             $table->date('invoice_date');
             $table->date('due_date')->nullable();
@@ -66,8 +68,7 @@ return new class extends Migration
             ])->default('Pending');
             $table->enum('payment_status', ['Unpaid', 'Paid'])->default('Unpaid');
             $table->timestamps();
-
-            $table->foreign('prc_bid_id')->references('id')->on('procurement_bids')->onDelete('cascade');
+            //$table->foreign('prc_bid_id')->references('id')->on('procurement_bids')->onDelete('cascade');
         });
 
         Schema::create('procurement_receipts', function (Blueprint $table) {
@@ -87,7 +88,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('procurement_receipts');
         Schema::dropIfExists('procurement_invoices');
-        Schema::dropIfExists('procurement_bids');
+        //Schema::dropIfExists('procurement_bids');
         Schema::dropIfExists('procurement_requests');
     }
 };

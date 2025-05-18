@@ -7,8 +7,14 @@
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
-    <form action="" method="POST" class="card p-4 mb-4 shadow-sm">
+    @if ($errors->any())
+        <div class="alert alert-warning" role="alert">
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        </div>
+    @endif
+    <form action="{{ route('warehouse.store') }}" method="POST" class="card p-4 mb-4 shadow-sm">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">Warehouse Name</label>
@@ -24,11 +30,18 @@
         </div>
         <div class="mb-3">
             <label for="manager_name" class="form-label">Manager Name</label>
-            <input type="text" name="manager_name" class="form-control" id="manager_name">
-        </div>
-        <div class="mb-3">
-            <label for="contact_no" class="form-label">Contact Number</label>
-            <input type="text" name="contact_no" class="form-control" id="contact_no">
+            @php
+                $managers = DB::table('accounts')->where('role', 'Warehouse Manager')->get(['id', 'fullname']);
+            @endphp
+
+            <select name="manager" class="form-select" required>
+                <option selected disabled>Select Here</option>
+                @forelse($managers as $manager)
+                    <option value="{{$manager->id}}">{{$manager->fullname}}</option>
+                @empty 
+                    <option selected disabled>There are no Warehouse Managers at the records</option>
+                @endforelse
+            </select>
         </div>
         <button type="submit" class="btn btn-primary">Add Warehouse</button>
     </form>
@@ -42,7 +55,6 @@
                 <th>Location</th>
                 <th>Capacity</th>
                 <th>Manager</th>
-                <th>Contact</th>
             </tr>
         </thead>
         <tbody>
@@ -52,8 +64,7 @@
                 <td>{{ $warehouse->name }}</td>
                 <td>{{ $warehouse->location }}</td>
                 <td>{{ $warehouse->capacity }}</td>
-                <td>{{ $warehouse->manager_name }}</td>
-                <td>{{ $warehouse->contact_no }}</td>
+                <td>{{ $warehouse->fullname }}</td>
             </tr>
             @endforeach
         </tbody>

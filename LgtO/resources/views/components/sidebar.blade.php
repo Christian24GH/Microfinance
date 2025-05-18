@@ -71,8 +71,14 @@
                 <div class="py-3 hstack nav-item {{ request()->routeIs('wrh.dashboard.index') ? 'active' : ''}}" >
                     <a class="nunito-nav" href="{{route('wrh.dashboard.index')}}" >Dashboard</a>
                 </div>
+                <div class="py-3 hstack nav-item {{ request()->routeIs('warehouse.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('warehouse.index')}}" >Warehouse</a>
+                </div>
                 <div class="py-3 hstack nav-item {{ request()->routeIs('wrh.inventory.index') ? 'active' : ''}}" >
                     <a class="nunito-nav" href="{{route('wrh.inventory.index')}}" >Inventory</a>
+                </div>
+                <div class="py-3 hstack nav-item {{ request()->routeIs('shipment.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('shipment.index')}}" >Shipment</a>
                 </div>
             @break
             @case('Asset Admin')

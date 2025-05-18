@@ -17,31 +17,31 @@
         <div class="container list-group-item">
             <div class="row mx-1 mb-2">
                 <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h5 class="mb-1">{{$bid->request_number}}</h5>
-                    <small>{{$bid->created_at}}</small>
+                    <h5 class="mb-1">{{$bid['request_number']}}</h5>
+                    
                 </div>
             </div>
             <div class="row mx-1 mb-2">
                 <div class="col">
-                    <p class="mb-1">{{$bid->subject}}, {{$bid->subject_type}}, {{$bid->quantity . ' ' . $bid->unit}}, {{$bid->due_date}}</p>
-                    <small>Supplier: {{$bid->name}}</small><br>
-                    <small><b>{{$bid->contact}}</b></small>
+                    <p class="mb-1">{{$bid['subject']}}, {{$bid['subject_type']}}, {{$bid['quantity'] . ' ' . $bid['unit']}}</p>
+                    <small>Supplier: {{$bid['vendor_name']}}</small><br>
+                    
                 </div>
-                <div class="col-1 d-flex align-items-center justify-content-end">
-                    <h3 class="mb-0">{{$bid->offer_price}}</h3>
+                <div class="col-auto d-flex align-items-center justify-content-end">
+                    <h3 class="mb-0">Php {{number_format($bid['offer_price'])}}</h3>
                 </div>
             </div>
             
             <div class="row ms-2 me-1">
                 <div class="col-10 rounded-1 bg-light">
-                    <small>{{$bid->agreement_text ?? 'No Agreement Notes'}}</small>
+                    <small>{{$bid['agreement_text'] ?? 'No Agreement Notes'}}</small>
                 </div>
                 <div class="col-auto flex-fill d-flex align-items-center justify-content-end">
                     <div class="btn-group" role="group">
                             <form action="{{route('prc.bid.update')}}" method="post">
                                 @csrf
-                                <input type="hidden" name="procurement_bid_id" value="{{$bid->PBID}}">
-                                <input type="hidden" name="procurement_request_id" value="{{$bid->PRID}}">
+                                <input type="hidden" name="procurement_bid_id" value="{{$bid['PBID']}}">
+                                <input type="hidden" name="procurement_request_id" value="{{$bid['PRID']}}">
                                 <Button type="submit" name="btn" value="accept" class="btn btn-primary">Accept</Button>
                                 <Button type="submit" name="btn" value="deny" class="btn btn-danger">Deny</Button>
                             </form>

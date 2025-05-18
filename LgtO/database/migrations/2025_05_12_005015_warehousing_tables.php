@@ -6,18 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('warehouse', function (Blueprint $table) {
             $table->id('warehouse_id');
-            $table->string('name', 255);
+            $table->string('name', 255)->unique();
             $table->string('location', 255);
             $table->integer('capacity');
-            $table->string('manager_name', 255);
+            $table->unsignedBigInteger('manager_id');
+            $table->timestamps();
+
+            $table->foreign('manager_id')->references('id')->on('accounts')->onDelete('cascade');
+        });
+
+        Schema::create('supplier', function (Blueprint $table) {
+            $table->id('supplier_id');
+            $table->string('name', 255);
             $table->string('contact_no', 15);
+            $table->string('email')->unique();
+            $table->text('address');
             $table->timestamps();
         });
 
@@ -29,10 +36,7 @@ return new class extends Migration
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
 
-            $table->foreign('supplier_id')
-                ->references('id')
-                ->on('vendors')
-                ->onDelete('cascade');
+            //$table->foreign('supplier_id')->references('supplier_id')->on('supplier')->onDelete('cascade');
         });
 
         Schema::create('shipment', function (Blueprint $table) {
@@ -122,6 +126,7 @@ return new class extends Migration
         Schema::dropIfExists('inventory');
         Schema::dropIfExists('shipment');
         Schema::dropIfExists('order');
+        Schema::dropIfExists('supplier');
         Schema::dropIfExists('warehouse');
     }
 };

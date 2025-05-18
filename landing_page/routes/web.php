@@ -7,7 +7,7 @@ use App\Http\Controllers\Register;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', [Landing::class, 'index']);
+Route::get('/', [Landing::class, 'index'])->name('landing');
 
 Route::prefix('/login')->group(function()
 {
