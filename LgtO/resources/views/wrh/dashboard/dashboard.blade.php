@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
+    {{--
     <h2 class="mb-4">Warehouse Management Dashboard</h2>
 
     <div class="row g-4 mb-4">
@@ -135,5 +136,6 @@
             </table>
         </div>
     </div>
+    --}}
 </div>
 @endsection

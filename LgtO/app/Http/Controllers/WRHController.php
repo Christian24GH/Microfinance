@@ -65,11 +65,10 @@ class WRHController extends Controller
             
         ];
         
-        $inventory = DB::table('inventory')
-            ->join('warehouse', 'inventory.warehouse_id', '=', 'warehouse.warehouse_id')
-            ->leftJoin('shipment', 'inventory.shipment_id', '=', 'shipment.shipment_id')
-            ->select('inventory.*', 'warehouse.name as warehouse_name', 'shipment.tracking_no')
-            ->get();
+        $inventory = DB::table('inventory', 'i')
+            ->join('shipment as s', 's.shipment_id', '=', 'i.shipment_id')
+            ->join('warehouse as w', 's.warehouse_id', '=', 'w.warehouse_id')
+            ->get(['i.*', 'w.name as warehouse_name', 's.tracking_no']);
 
         return view('wrh.phaseone.inventory', $viewdata)
             ->with('inventory', $inventory);
@@ -77,16 +76,22 @@ class WRHController extends Controller
 
     public function inventory_store(Request $request) {
         $validated = $request->validate([
-            'item_name' => 'required|string',
-            'quantity' => 'required|numeric',
-            'warehouse_id' => 'required|exists:warehouse,warehouse_id',
             'shipment_id' => 'nullable|exists:shipment,shipment_id'
         ]);
 
+        $order = DB::table('shipment')->where('shipment_id', $validated['shipment_id'])->first(['order_id']);
+        
+
+        $invoice = DB::table('order')->where('order_id', $order->order_id)->first(['invoice_id']);
+        $asset = DB::table('procurement_invoices')->where('id', $invoice->invoice_id)->first(['prc_approved_request_id']);
+
+        $request = DB::connection('logistic_pgsql')
+            ->table('prc_approved_requests')->where('id', $asset->prc_approved_request_id)
+            ->first(['subject', 'quantity']);
+
         DB::table('inventory')->insert([
-            'item_name' => $validated['item_name'],
-            'quantity' => $validated['quantity'],
-            'warehouse_id' => $validated['warehouse_id'],
+            'item_name' => $request->subject,
+            'quantity' => $request->quantity,
             'shipment_id' => $validated['shipment_id'] ?? null,
             'created_at' => now(), 'updated_at' => now()
         ]);
@@ -117,41 +122,59 @@ class WRHController extends Controller
     }
 
     public function shipment_index() {
-        $viewdata = $this->init();
-        $viewdata += [
-            'pageTitle' => 'Shipments'
-        ];
+            $viewdata = $this->init();
+            $viewdata += [
+                'pageTitle' => 'Shipments'
+            ];
         
-        $shipments = DB::table('shipment')->get();
+        $shipments = DB::table('shipment', 's')
+            ->join('warehouse as w', 'w.warehouse_id', '=', 's.warehouse_id')
+            ->get(['s.*', 'w.name as warehouse']);
+
         return view('wrh.phasethree.shipment', $viewdata)
             ->with('shipments', $shipments);
     }
 
     public function shipment_store(Request $request) {
         $validated = $request->validate([
-            'tracking_no' => 'required|string',
-            'status' => 'required|string'
+            'order_id' => 'required|exists:order,order_id',
+            'warehouse_id' => 'required|exists:warehouse,warehouse_id',
+            'ship_date' => 'required',
+            'carrier' => 'required',
+            'tracking_no' => 'required|string|unique:shipment,tracking_no',
+            'delivery_status' => 'required|string'
         ]);
 
         DB::table('shipment')->insert([
+            'warehouse_id' => $validated['warehouse_id'],
+            'order_id' => $validated['order_id'],
+            'ship_date' => $validated['ship_date'],
+            'carrier' => $validated['carrier'],
             'tracking_no' => $validated['tracking_no'],
-            'status' => $validated['status'],
+            'delivery_status' => $validated['delivery_status'],
             'created_at' => now(), 'updated_at' => now()
         ]);
         return back();
     }
 
     public function shipment_update(Request $request, $id) {
+        //dd($request);
         $validated = $request->validate([
-            'tracking_no' => 'required|string',
-            'status' => 'required|string'
+            'status' => 'required|string',
+            
         ]);
-
-        DB::table('shipment')->where('shipment_id', $id)->update([
-            'tracking_no' => $validated['tracking_no'],
-            'status' => $validated['status'],
-            'updated_at' => now()
-        ]);
+        DB::transaction(function()use($validated, $id){
+            $order_id = DB::table('shipment')->where('shipment_id', $id)->first(['order_id']);
+            DB::table('shipment')->where('shipment_id', $id)->update([
+                'delivery_status' => $validated['status'] == 'delivered' ? 'delivered' : 'cancelled',
+                'updated_at' => now()
+            ]);
+            //dd($order_id);
+            DB::table('order')->where('order_id', $order_id->order_id)->update([
+                'status' => $validated['status'] == 'delivered' ? 'received': 'cancelled',
+                'updated_at' => now()
+            ]);
+        });
         return back();
     }
 
@@ -161,22 +184,27 @@ class WRHController extends Controller
     }
 
     public function dockschedule_index() {
-        $schedules = DB::table('dock_schedule')
-            ->join('warehouse', 'dock_schedule.warehouse_id', '=', 'warehouse.warehouse_id')
-            ->select('dock_schedule.*', 'warehouse.name as warehouse_name')
+        $viewdata = $this->init();
+        $viewdata += [
+            'pageTitle' => 'Dock Schedules'
+        ];
+        $schedules = DB::table('dockschedule')
+            ->join('warehouse', 'dockschedule.warehouse_id', '=', 'warehouse.warehouse_id')
+            ->select('dockschedule.*', 'warehouse.name as warehouse_name')
             ->get();
-        return view('dock_schedule', compact('schedule'));
+        return view('wrh.phasetwo.dock_schedule', $viewdata)
+            ->with('schedules', $schedules);
     }
 
     public function dockschedule_store(Request $request) {
         $validated = $request->validate([
             'warehouse_id' => 'required|exists:warehouse,warehouse_id',
-            'schedule_time' => 'required|date'
+            'timeslot' => 'required|date'
         ]);
 
-        DB::table('dock_schedule')->insert([
+        DB::table('dockschedule')->insert([
             'warehouse_id' => $validated['warehouse_id'],
-            'schedule_time' => $validated['schedule_time'],
+            'timeslot' => $validated['timeslot'],
             'created_at' => now(), 'updated_at' => now()
         ]);
         return back();
@@ -185,12 +213,12 @@ class WRHController extends Controller
     public function dockschedule_update(Request $request, $id) {
         $validated = $request->validate([
             'warehouse_id' => 'required|exists:warehouse,warehouse_id',
-            'schedule_time' => 'required|date'
+            'timeslot' => 'required|date'
         ]);
 
-        DB::table('dock_schedule')->where('schedule_id', $id)->update([
+        DB::table('dockschedule')->where('schedule_id', $id)->update([
             'warehouse_id' => $validated['warehouse_id'],
-            'schedule_time' => $validated['schedule_time'],
+            'timeslot' => $validated['timeslot'],
             'updated_at' => now()
         ]);
         return back();
@@ -208,51 +236,50 @@ class WRHController extends Controller
         ];
         
         $orders = DB::table('order')->get();
+        $suppliers = DB::connection('logistic_pgsql')
+            ->table('market_userinfo')->where('activation_status', 'active')->get();
+
         return view('wrh.phasethree.order', $viewdata)
-            ->with('orders', $orders);
+            ->with('orders', $orders)
+            ->with('suppliers', $suppliers);
     }
 
     public function order_store(Request $request) {
+        foreach ($request->supplier as $supplierJson) {
+            $supplier = json_decode($supplierJson, true);
+            $supplier_id = $supplier['id'];
+            $vendor_name = $supplier['name'];
+        }
         $validated = $request->validate([
-            'inventory_id' => 'required|exists:inventory,inventory_id',
-            'warehouse_id' => 'required|exists:warehouse,warehouse_id',
-            'shipment_id' => 'nullable|exists:shipment,shipment_id',
-            'order_status' => 'required|string',
-            'quantity' => 'required|numeric',
+            'status' => 'required|string',
+            'total_amount' => 'required|numeric',
             'order_date' => 'required|date'
         ]);
 
         DB::table('order')->insert([
-            'inventory_id' => $validated['inventory_id'],
-            'warehouse_id' => $validated['warehouse_id'],
-            'shipment_id' => $validated['shipment_id'],
-            'order_status' => $validated['order_status'],
-            'quantity' => $validated['quantity'],
+            'supplier_id' => $supplier_id,
+            'vendor_name' => $vendor_name,
             'order_date' => $validated['order_date'],
-            'created_at' => now(), 'updated_at' => now()
+            'status' => $validated['status'],
+            'total_amount' => $validated['total_amount'],
+            'created_at' => now(), 
+            'updated_at' => now()
         ]);
         return back();
     }
 
     public function order_update(Request $request, $id) {
+        //dd($request);
         $validated = $request->validate([
-            'inventory_id' => 'required|exists:inventory,inventory_id',
-            'warehouse_id' => 'required|exists:warehouse,warehouse_id',
-            'shipment_id' => 'nullable|exists:shipment,shipment_id',
-            'order_status' => 'required|string',
-            'quantity' => 'required|numeric',
-            'order_date' => 'required|date'
+            'status' => 'required|string',
         ]);
+        DB::transaction(function()use($validated, $id){
+            DB::table('order')->where('order_id', $id)->update([
+                'status' => $validated['status'],
+                'updated_at' => now()
+            ]);
 
-        DB::table('order')->where('order_id', $id)->update([
-            'inventory_id' => $validated['inventory_id'],
-            'warehouse_id' => $validated['warehouse_id'],
-            'shipment_id' => $validated['shipment_id'],
-            'order_status' => $validated['order_status'],
-            'quantity' => $validated['quantity'],
-            'order_date' => $validated['order_date'],
-            'updated_at' => now()
-        ]);
+        });
         return back();
     }
 
@@ -261,20 +288,6 @@ class WRHController extends Controller
         return back();
     }
 
-    public function dockschedules_index() {
-        $viewdata = $this->init();
-        $viewdata += [
-            'pageTitle' => 'Dock Schedules'
-        ];
-
-        $schedules = DB::table('dockschedule')
-            ->join('warehouse', 'dockschedule.warehouse_id', '=', 'warehouse.warehouse_id')
-            ->select('dock_schedule.*', 'warehouse.name as warehouse_name')
-            ->get();
-
-        return view('wrh.phasetwo.dock_schedule', $viewdata)
-            ->with('schedules', $schedules);
-    }
 
     public function supplier_index() {
         $viewdata = $this->init();
@@ -330,7 +343,7 @@ class WRHController extends Controller
             ->select('quality_check.*', 'inventory.item_name')
             ->get();
         return view('wrh.phasetwo.quality_check', $viewdata)
-            ->with('check', $checks);
+            ->with('qualityCheck', $checks);
     }
     
     public function qualitycheck_store(Request $request) {

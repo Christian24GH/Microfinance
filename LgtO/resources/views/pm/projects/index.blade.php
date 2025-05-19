@@ -59,7 +59,7 @@
 @endsection
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid min-vh-100">
   <table class="table table-hover align-middle">
     <thead>
       <tr>

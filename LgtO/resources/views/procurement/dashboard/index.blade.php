@@ -1,6 +1,7 @@
 @extends('layout/default')
 
 @section('content')
+
 <div class="container-fluid" style="min-height: 100vh">
     <div class="row mb-3" style="min-height:20vh">
         <div class="col-auto flex-fill">

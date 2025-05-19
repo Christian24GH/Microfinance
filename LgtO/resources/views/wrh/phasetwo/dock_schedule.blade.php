@@ -1,7 +1,7 @@
 @extends('layout/default')
 
 @section('content')
-<div class="container mt-4">
+<div class="container mt-4 min-vh-100">
     <h2 class="mb-4">Add Dock Schedule</h2>
 
     @if(session('success'))
@@ -21,7 +21,10 @@
             <label for="warehouse_id" class="form-label">Warehouse</label>
             <select name="warehouse_id" id="warehouse_id" class="form-select" required>
                 <option value="">-- Select Warehouse --</option>
-                @foreach($warehouse as $warehouse)
+                @php
+                    $warehouses = DB::table('warehouse')->get();    
+                @endphp
+                @foreach($warehouses as $warehouse)
                     <option value="{{ $warehouse->warehouse_id }}">{{ $warehouse->name }}</option>
                 @endforeach
             </select>
@@ -45,10 +48,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($dockSchedule as $schedule)
+            @foreach($schedules as $schedule)
             <tr>
                 <td>{{ $schedule->schedule_id }}</td>
-                <td>{{ $schedule->warehouse->name ?? 'N/A' }}</td>
+                <td>{{ $schedule->warehouse_name ?? 'N/A' }}</td>
                 <td>{{ \Carbon\Carbon::parse($schedule->timeslot)->format('Y-m-d H:i') }}</td>
             </tr>
             @endforeach

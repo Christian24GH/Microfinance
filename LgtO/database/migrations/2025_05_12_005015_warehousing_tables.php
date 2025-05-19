@@ -31,16 +31,20 @@ return new class extends Migration
         Schema::create('order', function (Blueprint $table) {
             $table->id('order_id');
             $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('invoice_id');
+            $table->string('vendor_name');
             $table->date('order_date');
             $table->enum('status', ['pending', 'approved', 'shipped', 'received', 'cancelled']);
             $table->decimal('total_amount', 10, 2);
             $table->timestamps();
 
+            $table->foreign('invoice_id')->references('id')->on('procurement_invoices')->onDelete('cascade');
             //$table->foreign('supplier_id')->references('supplier_id')->on('supplier')->onDelete('cascade');
         });
 
         Schema::create('shipment', function (Blueprint $table) {
             $table->id('shipment_id');
+            $table->unsignedBigInteger('warehouse_id');
             $table->unsignedBigInteger('order_id');
             $table->date('ship_date');
             $table->string('carrier', 255);
@@ -49,20 +53,18 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('order_id')->references('order_id')->on('order')->onDelete('cascade');
+            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouse')->onDelete('cascade');
         });
 
         Schema::create('inventory', function (Blueprint $table) {
             $table->id('inventory_id');
             $table->unsignedBigInteger('shipment_id');
-            $table->unsignedBigInteger('warehouse_id');
             $table->string('item_name', 255);
             $table->integer('quantity');
-            $table->date('received_date');
-            $table->string('storage_condition', 255);
             $table->timestamps();
 
             $table->foreign('shipment_id')->references('shipment_id')->on('shipment')->onDelete('cascade');
-            $table->foreign('warehouse_id')->references('warehouse_id')->on('warehouse')->onDelete('cascade');
+           
         });
 
         Schema::create('quality_check', function (Blueprint $table) {

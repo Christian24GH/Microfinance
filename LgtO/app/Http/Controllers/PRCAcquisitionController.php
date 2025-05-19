@@ -130,17 +130,22 @@ class PRCAcquisitionController extends Controller
                         ->where('id', $request->procurement_bid_id)
                         ->select('offer_price', 'vendor_id')
                         ->first();
+        
                 
-                $vendor = $bidRow->vendor_id;
+                $vendor = DB::connection('logistic_pgsql')
+                    ->table('market_userinfo')
+                    ->where('id', $bidRow->vendor_id)
+                    ->first(['id', 'name']);
 
+                //dd($vendor);
                 $row = DB::connection('logistic_pgsql')
                     ->table('l2_vendor_history')
                     ->insert([
-                        'vendor_id' => $vendor,
+                        'vendor_id' => $vendor->id,
                         'event_type' => 'Offer Accepted'
                     ]);
                 
-                DB::table('procurement_invoices')->insert([
+                $invoice = DB::table('procurement_invoices')->insertGetId([
                     'prc_bid_id'     => $request->procurement_bid_id,
                     'prc_approved_request_id' => $request->procurement_request_id,
                     'invoice_amount' => $bidRow->offer_price,
@@ -150,6 +155,17 @@ class PRCAcquisitionController extends Controller
                     'payment_status' => 'Unpaid',
                     'created_at'     => now(),
                     'updated_at'     => now()
+                ]);
+
+                DB::table('order')->insert([
+                    'supplier_id' => $vendor->id,
+                    'vendor_name' => $vendor->name,
+                    'invoice_id' => $invoice,
+                    'order_date' => now(),
+                    'status' => 'Pending',
+                    'total_amount' => $bidRow->offer_price,
+                    'created_at' => now(), 
+                    'updated_at' => now()
                 ]);
             }else{
 

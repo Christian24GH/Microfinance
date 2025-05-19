@@ -1,7 +1,7 @@
 @extends('layout.default')
 
 @section('content')
-<div class="container">
+<div class="container min-vh-100"">
   @if (session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
   @endif

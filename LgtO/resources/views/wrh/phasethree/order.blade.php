@@ -1,8 +1,8 @@
 @extends('layout/default')
 
 @section('content')
-<div class="container mt-4">
-    <h2 class="mb-4">Add Order</h2>
+<div class="container mt-4" style="min-height:100vh">
+    {{--<h2 class="mb-4">Add Order</h2>--}}
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -14,15 +14,18 @@
             @endforeach
         </div>
     @endif
+    {{--
     <form action="{{ route('order.store') }}" method="POST" class="card p-4 mb-4 shadow-sm">
         @csrf
 
         <div class="mb-3">
             <label for="supplier_id" class="form-label">Supplier</label>
-            <select name="supplier_id" id="supplier_id" class="form-select" required>
+            <select name="supplier[]" id="supplier_id" class="form-select" required>
                 <option value="">-- Select Supplier --</option>
-                @foreach($supplier as $supplier)
-                    <option value="{{ $supplier->supplier_id }}">{{ $supplier->name }}</option>
+                @foreach($suppliers as $supplier)
+                    <option value='@json(["id" => $supplier->id, "name" => $supplier->name])'>
+                        {{ $supplier->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -49,8 +52,10 @@
 
         <button type="submit" class="btn btn-primary">Add Order</button>
     </form>
-
+    --}}
     <h4>Order List</h4>
+    
+    
     <table class="table table-bordered bg-white shadow-sm">
         <thead>
             <tr>
@@ -62,10 +67,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($order as $order)
+            @foreach($orders as $order)
             <tr>
                 <td>{{ $order->order_id }}</td>
-                <td>{{ $order->supplier->name ?? 'N/A' }}</td>
+                <td>{{ $order->vendor_name ?? 'N/A' }}</td>
                 <td>{{ $order->order_date }}</td>
                 <td>{{ $order->status }}</td>
                 <td>${{ number_format($order->total_amount, 2) }}</td>

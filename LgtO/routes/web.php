@@ -124,13 +124,13 @@ Route::middleware([ValidSession::class])->prefix('/warehouse')->group(function (
     // Shipment
     Route::get('/shipment', [WRHController::class, 'shipment_index'])->name('shipment.index');
     Route::post('/shipment', [WRHController::class, 'shipment_store'])->name('shipment.store');
-    Route::put('/shipment/{id}', [WRHController::class, 'shipment_update'])->name('shipment.update');
+    Route::post('/shipment/{id}', [WRHController::class, 'shipment_update'])->name('shipment.update');
     Route::delete('/shipment/{id}', [WRHController::class, 'shipment_destroy'])->name('shipment.destroy');
 
     // Orders
     Route::get('/order', [WRHController::class, 'order_index'])->name('order.index');
     Route::post('/order', [WRHController::class, 'order_store'])->name('order.store');
-    Route::put('/order/{id}', [WRHController::class, 'order_update'])->name('order.update');
+    Route::post('/order/{id}', [WRHController::class, 'order_update'])->name('order.update');
     Route::delete('/order/{id}', [WRHController::class, 'order_destroy'])->name('order.destroy');
 
     // Dock Schedule
@@ -147,9 +147,9 @@ Route::middleware([ValidSession::class])->prefix('/warehouse')->group(function (
 
     // Quality Check
     Route::get('/quality_check', [WRHController::class, 'qualitycheck_index'])->name('qualitycheck.index');
-    Route::post('/quality_check', [WRHController::class, 'qualitycheck_store'])->name('qualitycheck.store');
-    Route::put('/quality_check/{id}', [WRHController::class, 'qualitycheck_update'])->name('qualitycheck.update');
-    Route::delete('/quality_check/{id}', [WRHController::class, 'qualitycheck_destroy'])->name('qualitycheck.destroy');
+    Route::post('/quality_check', [WRHController::class, 'qualitycheck_store'])->name('quality_check.store');
+    Route::put('/quality_check/{id}', [WRHController::class, 'qualitycheck_update'])->name('quality_check.update');
+    Route::delete('/quality_check/{id}', [WRHController::class, 'qualitycheck_destroy'])->name('quality_check.destroy');
 
     // Last Mile Delivery
     Route::get('/lastmile_delivery', [WRHController::class, 'lastmile_index'])->name('lastmile.index');

@@ -20,13 +20,31 @@
         <div class="mb-3">
             <label for="order_id" class="form-label">Order</label>
             <select name="order_id" id="order_id" class="form-select" required>
+                @php
+                    $orders = DB::table('order as o')
+                        ->leftJoin('shipment as s', 's.order_id', '=', 'o.order_id')
+                        ->whereNull('s.order_id')
+                        ->select('o.*') // or specify which fields you need
+                        ->get();
+                @endphp
                 <option value="">-- Select Order --</option>
-                @foreach($order as $order)
+                @foreach($orders as $order)
                     <option value="{{ $order->order_id }}">Order #{{ $order->order_id }} - {{ $order->order_date }}</option>
                 @endforeach
             </select>
         </div>
-
+        <div class="mb-3">
+            <label for="warehouse_id" class="form-label">Warehouse</label>
+            @php
+                $warehouses = DB::table('warehouse')->get();
+            @endphp
+            <select name="warehouse_id" id="warehouse_id" class="form-select" required>
+                <option value="">-- Select Warehouse --</option>
+                @foreach($warehouses as $warehouse)
+                    <option value="{{ $warehouse->warehouse_id }}">{{ $warehouse->name }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="mb-3">
             <label for="ship_date" class="form-label">Ship Date</label>
             <input type="date" name="ship_date" id="ship_date" class="form-control" required>
@@ -62,6 +80,7 @@
             <tr>
                 <th>ID</th>
                 <th>Order ID</th>
+                <th>Warehouse</th>
                 <th>Ship Date</th>
                 <th>Carrier</th>
                 <th>Tracking No</th>
@@ -69,15 +88,25 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($shipment as $shipment)
-            <tr>
+            @foreach($shipments as $shipment)
+            <form id="updateForm" action="{{route('shipment.update', ['id'=>$shipment->shipment_id])}}" method="post">
+                @csrf
+                <tr>
                 <td>{{ $shipment->shipment_id }}</td>
                 <td>{{ $shipment->order_id }}</td>
+                <td>{{ $shipment->warehouse }}</td>
                 <td>{{ $shipment->ship_date }}</td>
                 <td>{{ $shipment->carrier }}</td>
                 <td>{{ $shipment->tracking_no }}</td>
                 <td>{{ $shipment->delivery_status }}</td>
-            </tr>
+                @if(!($shipment->delivery_status == 'delivered' || $shipment->delivery_status == 'cancelled'))
+                <td>
+                    <button class="btn btn-primary btn-sm" name="status" value="delivered" type="submit">Mark as Delivered</button>
+                    <button class="btn btn-danger btn-sm" name="status" value="cancelled" type="submit">Mark as Cancelled</button>
+                </td>
+                @endif
+                </tr>
+            </form>
             @endforeach
         </tbody>
     </table>

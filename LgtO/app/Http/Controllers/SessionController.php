@@ -44,7 +44,7 @@ class SessionController extends Controller
                 return redirect()->route("pm.dashboard.index");
             
             case 'Warehouse Manager':
-                return redirect()->route("wrh.dashboard.index");
+                return redirect()->route("warehouse.index");
         }
     }
 

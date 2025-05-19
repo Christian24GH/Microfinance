@@ -68,9 +68,7 @@
                 </div>
             @break
             @case('Warehouse Manager')
-                <div class="py-3 hstack nav-item {{ request()->routeIs('wrh.dashboard.index') ? 'active' : ''}}" >
-                    <a class="nunito-nav" href="{{route('wrh.dashboard.index')}}" >Dashboard</a>
-                </div>
+                
                 <div class="py-3 hstack nav-item {{ request()->routeIs('warehouse.index') ? 'active' : ''}}" >
                     <a class="nunito-nav" href="{{route('warehouse.index')}}" >Warehouse</a>
                 </div>
@@ -80,6 +78,23 @@
                 <div class="py-3 hstack nav-item {{ request()->routeIs('shipment.index') ? 'active' : ''}}" >
                     <a class="nunito-nav" href="{{route('shipment.index')}}" >Shipment</a>
                 </div>
+                <div class="py-3 hstack nav-item {{ request()->routeIs('order.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('order.index')}}" >Orders</a>
+                </div>
+                {{--
+                <div class="py-3 hstack nav-item {{ request()->routeIs('wrh.dashboard.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('wrh.dashboard.index')}}" >Dashboard</a>
+                </div>
+                <div class="py-3 hstack nav-item {{ request()->routeIs('dockschedule.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('dockschedule.index')}}" >Dock Schedule</a>
+                </div>
+                <div class="py-3 hstack nav-item {{ request()->routeIs('qualitycheck.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('qualitycheck.index')}}" >Quality Checking</a>
+                </div>
+                <div class="py-3 hstack nav-item {{ request()->routeIs('qualitycheck.index') ? 'active' : ''}}" >
+                    <a class="nunito-nav" href="{{route('qualitycheck.index')}}" >Last Mile</a>
+                </div>
+                --}}
             @break
             @case('Asset Admin')
                 <div class="py-3 hstack nav-item {{ request()->routeIs('asset.dashboard.index') ? 'active' : ''}}" >

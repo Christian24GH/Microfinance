@@ -21,7 +21,10 @@
             <label for="inventory_id" class="form-label">Inventory</label>
             <select name="inventory_id" id="inventory_id" class="form-select" required>
                 <option value="">-- Select Inventory --</option>
-                @foreach($inventory as $inventory)
+                @php
+                    $inventories = DB::table('inventory')->get();
+                @endphp
+                @foreach($inventories as $inventory)
                     <option value="{{ $inventory->inventory_id }}">{{ $inventory->item_name }} (ID: {{ $inventory->inventory_id }})</option>
                 @endforeach
             </select>
