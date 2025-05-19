@@ -1,0 +1,94 @@
+CREATE TABLE job_postings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    job_type ENUM('Full-Time', 'Part-Time', 'Contract', 'Internship') NOT NULL,
+    description TEXT,
+    posted_on DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- To link with an admin user:
+admin_id INT,
+FOREIGN KEY (admin_id) REFERENCES users(id)
+
+
+-------- applicants
+
+CREATE TABLE applicants (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    position_applied VARCHAR(100) NOT NULL,
+    status ENUM('Pending', 'Interviewed', 'Hired', 'Rejected') DEFAULT 'Pending',
+    notes TEXT,
+    applied_on DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+----Connect to job posting
+
+job_posting_id INT,
+FOREIGN KEY (job_posting_id) REFERENCES job_postings(id) ON DELETE SET NULL
+
+
+
+
+----newhired
+CREATE TABLE new_hires (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    position VARCHAR(100) NOT NULL,
+    notes TEXT,
+    hired_on DATE NOT NULL DEFAULT CURRENT_DATE,
+    job_posting_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (job_posting_id) REFERENCES job_postings(id) ON DELETE SET NULL
+);
+
+
+----performance
+
+CREATE TABLE employee_performance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    rating ENUM('Excellent', 'Good', 'Average', 'Poor') NOT NULL,
+    notes TEXT,
+    review_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+connect performance into new hired---
+
+ALTER TABLE employee_performance
+ADD new_hire_id INT,
+ADD FOREIGN KEY (new_hire_id) REFERENCES new_hires(id) ON DELETE CASCADE;
+
+
+
+---social
+
+CREATE TABLE social_recognition (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    recognition_type ENUM('Employee of the Month', 'Team Player', 'Innovation Award') NOT NULL,
+    recognition_details TEXT,
+    recognition_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+-optional link into performance
+
+
+ALTER TABLE social_recognition
+ADD new_hire_id INT,
+ADD FOREIGN KEY (new_hire_id) REFERENCES new_hires(id) ON DELETE CASCADE;

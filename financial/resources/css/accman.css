@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+:root {
+    --mfc1: #4bc5ec;
+    --mfc2: #94dcf4;
+    --mfc3: #2c3c8c;
+    --mfc4: #5cbc9c;
+    --mfc5: #bdccdc;
+    --mfc6: #353c61;
+    --mfc7: #272c47;
+    --mfc8: white;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+html, body {
+    height: 100%;
+    background-color: var(--mfc8);
+    overflow-x: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: "Nunito", sans-serif;
+}
+
+.main-content {
+   min-height: 100vh;
+}
+
+#reqmain {
+    height: 500px;
+}
+
+.slide {
+    height: 100%;
+    width: auto;
+    min-width: 180px;
+    position: absolute;
+    background-color: var(--mfc6);
+    transition: 0.5s ease;
+    transform: translateX(-220px);
+    top: auto;
+    z-index: 25;
+}
+
+.slide .logo {
+    text-align: center;
+    width: 100px;
+    margin-left: 55px;
+}
+
+.slide ul {
+    padding-left: 0;
+}
+
+.slide ul li {
+    margin-left: 0;
+}
+
+ul li {
+    list-style: none;
+}
+
+ul li a {
+    color: var(--mfc1);
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    padding: 5px 0;
+    display: block;
+    text-transform: capitalize;
+    text-decoration: none;
+    transition: 0.2s ease-out;
+}
+
+ul li:hover a {
+    background-color: var(--mfc8);
+    color: var(--mfc8);
+}
+
+ul li a i {
+    width: 30px;
+    text-align: center;
+}
+
+input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+input:checked~.slide {
+    transform: translateX(0);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.card-header a {
+    left: 50%;
+    text-decoration: none;
+    color: var(--mfc8);
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+}
+
+.card-header a:hover {
+    color: var(--mfc1);
+}
+
+.search-button {
+    display: flex;
+    align-items: center;
+}
+
+.search-button form {
+    margin-left: auto;
+}
+
+.alert {
+    position: absolute;
+    text-align: center;
+    align-self: center;
+    z-index: 5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: transparent;
+    border: none;
+}
+
+.btn-size {
+    width: 75%;
+    text-align: center;
+    padding: 6px;
+    font-size: 14px;
+    font-family: "Nunito", sans-serif;
+}
