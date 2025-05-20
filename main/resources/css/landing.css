@@ -1,20 +1,44 @@
-.nav-item{
+/* Hide custom dropdown by default */
+.custom-dropdown-menu {
+    display: none;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    z-index: 1050;
+}
+
+/* Show dropdown on nav-link hover */
+.nav-item.dropdown:hover .custom-dropdown-menu {
+    display: block;
+}
+
+/* Optional: smooth fade in animation */
+.custom-dropdown-menu {
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.nav-link {
     position: relative;
 }
 
-.nav-link::after{
+.nav-link::after {
     content: '';
     background-color: var(--mfc1);
     width: 50%;
     height: 2px;
-    position:absolute;
+    position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
     transition: all 0.1s ease-in-out;
-}
     
+}
+
 .nav-link:hover::after {
     opacity: 1;
 }

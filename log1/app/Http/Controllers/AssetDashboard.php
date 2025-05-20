@@ -18,10 +18,21 @@ class AssetDashboard extends Controller
             ->join('assets as a', 'a.id', '=', 'wo.asset_id')
             ->join('schedules as s', 's.id', '=', 'wo.schedule_id')
             ->join('accounts as u', 'u.id', '=', 'wo.created_by')
+            ->join('employee_info as e', 'e.id', '=', 'u.employee_id')
             ->join('maintenance as ma', 'ma.work_order_id', '=', 'wo.id')
             ->join('accounts as u2', 'u2.id', '=', 'ma.technicians_id')
-            ->select('wo.*', 'a.asset_tag', 'a.category','s.maintenance_date', 'u.fullname', 'u2.fullname as assigned_to')
-            ->where('wo.status', 'in_progress')->limit(5)->get();
+            ->join('employee_info as e2', 'e2.id', '=', 'u2.employee_id')
+            ->select(
+                'wo.*',
+                'a.asset_tag',
+                'a.category',
+                's.maintenance_date',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as created_by"),
+                DB::raw("CONCAT(e2.firstname, ' ', COALESCE(e2.middlename, ''), ' ', e2.lastname) as assigned_to")
+            )
+            ->where('wo.status', 'in_progress')
+            ->limit(5)
+            ->get();
         return view('asset.dashboard.index', $viewdata)
             ->with('Requests', $workOrdersCount)
             ->with('Logs', $Logs)

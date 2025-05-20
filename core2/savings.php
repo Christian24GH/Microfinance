@@ -3,7 +3,7 @@
     $host = 'localhost';          // your DB host
     $user = 'root';       // your DB username
     $password = ''; // your DB password
-    $database = 'lown_db';        // your DB name
+    $database = 'microfinance';        // your DB name
 
     // Create connection
     $conn = mysqli_connect($host, $user, $password, $database);

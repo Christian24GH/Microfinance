@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';       
 $password = '';      
-$database = 'lown_db';
+$database = 'microfinance';
 
 // Create connection
 $conn = new mysqli($host, $user, $password, $database);

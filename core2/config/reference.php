@@ -6,7 +6,7 @@ if (!isset($_GET['client_id'])) {
 
 $client_id = intval($_GET['client_id']);
 
-$conn = new mysqli('localhost', 'root', '', 'lown_db');
+$conn = new mysqli('localhost', 'root', '', 'microfinance');
 if ($conn->connect_error) {
     echo "Connection failed.";
     exit;

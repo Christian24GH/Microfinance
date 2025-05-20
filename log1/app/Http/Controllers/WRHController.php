@@ -12,9 +12,17 @@ class WRHController extends Controller
         $viewdata += [
             'pageTitle' => 'Warehouse Management'
         ];
-        $warehouses = DB::table('warehouse', 'w')
+        $warehouses = DB::table('warehouse as w')
             ->join('accounts as a', 'a.id', '=', 'w.manager_id')
-            ->get(['w.*', 'a.fullname']);
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->where('r.role', 'Warehouse Manager')
+            ->get([
+                'w.*',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname"),
+                'r.role as manager_role'
+            ]);
+
         return view('wrh.phaseone.warehouse', $viewdata)
             ->with('warehouse', $warehouses);
     }

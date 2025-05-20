@@ -15,43 +15,6 @@ class AccountSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [
-            'Client',
-            'HR Supervisor',
-            'Finance Officer',
-            'Audit Officer',
-            'Maintenance Staff',
-            'Technician',
-            'Maintenance Admin',
-            'Project Manager',
-            'Asset Admin',
-            'Asset Staff',
-            'Asset Analyst',
-            'Warehouse Manager',
-            'Inventory Staff',
-            'Supplier',
-            'Procurement Administrator',
-            'Quality Inspector',
-            'Procurement Analyst',
-            'Communication Officer',
-            'Payroll Officer',
-            'Super Admin',
-            'Employee',
-            'HR Administrator',
-            'Manager/Supervisor',
-            'Team Member',
-            'Team Leader',
-            'Loan Officer'
-        ];
-
-        for ($i = 1; $i <= 10; $i++) {
-            Accounts::create([
-                'fullname' => 'User ' . $i,
-                'email' => 'user' . $i . '@example.com',
-                'password' => Hash::make('password123'),
-                'role' => $roles[array_rand($roles)],
-                'remember_token' => Str::random(10),
-            ]);
-        }
+        
     }
 }

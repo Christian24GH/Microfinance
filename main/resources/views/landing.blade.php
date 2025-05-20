@@ -35,24 +35,38 @@
                         <span class="bi bi-x text-light fs-2"></span>
                     </button>
                 </div>
+
                 <ul class="navbar-nav gap-3 align-items-center justify-content-end">
-                    
+
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#loan"><h6 class="m-0 lato-bold">Packages</h6></a>
+                        <a class="nav-link text-light" href="#loan">
+                            <h6 class="m-0 lato-bold">Packages</h6>
+                        </a>
+                    </li>
+
+                    <li class="nav-item dropdown position-relative">
+                        <div class="nav-link text-light lato-bold" id="workWithUsDropdown">
+                            Work with Us
+                        </div>
+                        <ul class="custom-dropdown-menu list-unstyled m-0 p-2 bg-light rounded shadow position-absolute">
+                            <li><a class="dropdown-item px-2 py-1" href="{{route('client.register.index')}}">Customer</a></li>
+                            <li><a class="dropdown-item px-2 py-1" href="">Employee</a></li>
+                            <li><a class="dropdown-item px-2 py-1" href="https://pub-domain.onrender.com/docs/dashboard/vendor_signup/">Vendor</a></li>
+                        </ul>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#about"><h6 class="m-0 lato-bold">Work with Us</h6></a>
+                        <a class="nav-link text-light" href="#about">
+                            <h6 class="m-0 lato-bold">About Us</h6>
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#about"><h6 class="m-0 lato-bold">About Us</h6></a>
+                        <a class="btn btn-light text-dark px-3 py-1 lato-bold" href="{{ route('login.index') }}">Sign In</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="btn btn-light text-dark px-3 py-1 lato-bold" href="{{route('login.index')}}">Sign In</a>
-                    </li>
                 </ul>
+
             </div>
         </div>
     </nav>
@@ -65,7 +79,7 @@
                     Experience the power of microfinance made simple.<br>
                     Inclusive. Empowering. Built for your growth.
                 </p>
-                <a class="btn btn-lg btn-primary lato-bold" href="{{route('register.index')}}" style="width:fit-content">Get Started</a>
+                <a class="btn btn-lg btn-primary lato-bold" href="{{route('client.register.index')}}" style="width:fit-content">Get Started</a>
             </div>
             <div id="pictureCon" class="w-50 h-100">
                 <img id="img1" src="{{asset('img/PicLarge.png')}}" alt="">
@@ -74,7 +88,7 @@
         </div>
         <div class="container-fluid" style="background:var(--mfc4)">
             <div id="loan" class="my-5" style="height: 7rem;"></div>
-            <div  class="services mx-5 mt-5">
+                <div  class="services mx-5 mt-5">
                 <h3 class="text-center mb-4">Micro Loan Packages</h3>
                 <div class="container-fluid">
                     <div class="row">
@@ -232,50 +246,14 @@
                 </div>
             </div>
             <div id="about" class="my-5" style="height: 7rem;"></div>
-            <div id="" class="about mx-5 mt-5 py-5">
+                <div id="" class="about mx-5 mt-5 py-5">
                 <h3 class="text-center mb-4">About Us</h3>
-                <h6 class="text-center mb-4">Departments</h6>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-3">
-                            <div class="card" style="height: 10rem;">
-                                <div class="card-body vstack justify-content-between">
-                                    <h5 class="mb-0 card-title">Human Resource</h5>
-                                    <div class="container">
-                                        <a href="#" class="btn applyNow" style="background-color:var(--mf3); width:fit-content">Work with us</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="card" style="height: 10rem;">
-                                <div class="card-body">
-                                    <h5 class="mb-0 card-title">Core</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="card" style="height: 10rem;">
-                                <div class="card-body">
-                                    <h5 class="mb-0 card-title">Financials</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="card" style="height: 10rem;">
-                                <div class="card-body vstack justify-content-between">
-                                    <h5 class="mb-0 card-title">Logistics</h5>
-                                    <a href="https://admin-domain.onrender.com/" class="btn applyNow" style="background-color:var(--mf3); width:fit-content">Become a partner</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="container d-flex justify-content-center flex-column mt-5">
                     <h6 class="text-center mb-4">Contacts</h6>
                     <p class="body-text text-center">Get in touch with us at <strong>Trulend@gmail.com</strong></p>
                 </div>
             </div>
+            
         </div>
     </main>
 

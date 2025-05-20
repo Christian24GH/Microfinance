@@ -59,7 +59,10 @@ return [
             'throw' => false,
             'report' => false,
         ],
-
+        'microfinance_files' => [
+            'driver' => 'local',
+            'root' => 'C:/xampp/htdocs/dashboard/Microfinance/core1/components/files',
+        ],
     ],
 
     /*

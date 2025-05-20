@@ -14,29 +14,48 @@ class PMProjects extends Controller
             'pageTitle' => 'Projects',
             'hasBtn' => 'createProjectModal',
         ];
+        // Projects with Team Leader names
         $projects = DB::table('projects')
-            ->join('accounts', 'projects.team_leader_id', '=', 'accounts.id')
-            ->select('projects.*', 'accounts.fullname as team_leader_name')
+            ->join('accounts as a', 'projects.team_leader_id', '=', 'a.id')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->select('projects.*', DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as team_leader_name"))
             ->get();
-            
+
+        // Groups in Project Teams
         $teams = DB::table('project_team')
             ->select('group')
             ->groupBy('group')
             ->get();
 
+        // Members by Group with fullname and role
         $membersByGroup = DB::table('project_team')
-            ->join('accounts', 'project_team.account_id', '=', 'accounts.id')
-            ->select('project_team.group', 'accounts.id', 'accounts.fullname', 'accounts.role')
+            ->join('accounts as a', 'project_team.account_id', '=', 'a.id')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->select(
+                'project_team.group',
+                'a.id',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname"),
+                'r.role'
+            )
             ->get()
             ->groupBy('group');
 
+        // Tasks grouped by Project ID
         $tasksByProjectId = DB::table('tasks')
             ->select('id', 'title', 'status', 'project_id')
             ->get()
             ->groupBy('project_id');
 
-            
-        $leaders = DB::table('accounts')->where('role', 'TeamLeader')->get();
+        // Leaders (TeamLeader role accounts)
+        $leaders = DB::table('accounts as a')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->where('r.role', 'Team Leader')
+            ->get([
+                'a.id',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname")
+            ]);
         return view('pm.projects.index', $viewdata)
             ->with('projects', $projects)
             ->with('teams', $teams)

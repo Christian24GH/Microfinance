@@ -16,7 +16,7 @@ class ValidSession
     public function handle(Request $request, Closure $next): Response
     {
         if(!session('user')){
-            return redirect()->away('http://localhost/dashboard/Microfinance/landing_page/public/login');
+            return redirect()->away('http://localhost/dashboard/Microfinance/main/public/login');
         }
         return $next($request);
     }

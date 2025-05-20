@@ -52,17 +52,11 @@
                             </div>
                             @enderror
                         </div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                            <label class="form-check-label" for="remember">
-                                Remember me
-                            </label>
-                        </div>
                         <button type="submit" class="btn w-100 rounded-pill">Sign in</button>
                     </form>
                     <hr>
                     <p class="text-center">Don't have an account?</p>
-                    <a type="button" class="btn w-100 rounded-pill" href="{{ route('register.index') }}">Sign up</a>
+                    <a type="button" class="btn w-100 rounded-pill" href="{{ route('client.register.index') }}">Sign up as Client</a>
                 </div>
             </div>
         </div>

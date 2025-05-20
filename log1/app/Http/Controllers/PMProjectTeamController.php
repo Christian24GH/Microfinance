@@ -16,20 +16,26 @@ class PMProjectTeamController extends Controller
         ];
 
         $teams = DB::table('project_team')
-        ->select('group')
-        ->groupBy('group')
-        ->get();
+            ->select('group')
+            ->groupBy('group')
+            ->get();
 
         $teamData = [];
 
         foreach ($teams as $team) {
             $members = DB::table('project_team')
-                ->join('accounts', 'project_team.account_id', '=', 'accounts.id')
+                ->join('accounts as a', 'project_team.account_id', '=', 'a.id')
+                ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+                ->join('roles as r', 'r.id', '=', 'a.role_id')
                 ->where('project_team.group', $team->group)
-                ->select('accounts.fullname', 'accounts.role', 'accounts.id')
+                ->select(
+                    DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname"),
+                    'r.role',
+                    'a.id'
+                )
                 ->get();
 
-            $leader = $members->firstWhere('role', 'TeamLeader');
+            $leader = $members->firstWhere('role', 'Team Leader');
             $memberNames = $members->pluck('fullname');
 
             $teamData[] = [
@@ -38,7 +44,18 @@ class PMProjectTeamController extends Controller
                 'members' => $memberNames,
             ];
         }
-        $Employees = DB::table('accounts')->where('role', 'EMPLOYEE')->get();
+
+        // Fetch all Employees (role: EMPLOYEE)
+        $Employees = DB::table('accounts as a')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->where('r.role', 'EMPLOYEE')
+            ->select(
+                'a.id',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname")
+            )
+            ->get();
+
         return view('pm.teams.index', $viewdata)
             ->with('teams', $teamData)
             ->with('accounts',$Employees);
@@ -60,6 +77,10 @@ class PMProjectTeamController extends Controller
             // Ensure no duplicates while inserting members (leader might be in members)
             $uniqueMembers = collect($members)->unique()->values();
 
+            // Get role IDs from roles table
+            $teamMemberRoleId = DB::table('roles')->where('role', 'Team Member')->value('id');
+            $teamLeaderRoleId = DB::table('roles')->where('role', 'Team Leader')->value('id');
+
             // Insert members to project_team
             foreach ($uniqueMembers as $accountId) {
                 DB::table('project_team')->insert([
@@ -68,8 +89,9 @@ class PMProjectTeamController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
                 DB::table('accounts')->where('id', $accountId)->update([
-                    'role' => 'TeamMember'
+                    'role_id' => $teamMemberRoleId
                 ]);
             }
 
@@ -91,7 +113,7 @@ class PMProjectTeamController extends Controller
 
             // Assign leader role
             DB::table('accounts')->where('id', $leaderId)->update([
-                'role' => 'TeamLeader'
+                'role_id' => $teamLeaderRoleId
             ]);
         });
 
@@ -102,6 +124,10 @@ class PMProjectTeamController extends Controller
     {
         DB::transaction(function () use ($group) {
             // Get account IDs in this team
+            // Get Employee role_id from roles table
+            $employeeRoleId = DB::table('roles')->where('role', 'Employee')->value('id');
+
+            // Get all account IDs in the group
             $accountIds = DB::table('project_team')
                 ->where('group', $group)
                 ->pluck('account_id');
@@ -109,7 +135,7 @@ class PMProjectTeamController extends Controller
             // Reset their roles to Employee
             DB::table('accounts')
                 ->whereIn('id', $accountIds)
-                ->update(['role' => 'EMPLOYEE']);
+                ->update(['role_id' => $employeeRoleId]);
 
             // Remove them from project_team
             DB::table('project_team')->where('group', $group)->delete();

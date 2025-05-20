@@ -187,7 +187,11 @@ class WorkOrders extends Controller
 
         $assets = DB::table('assets')->get();
         //$maintenance = DB::table('maintenance')->get();
-        $technicians = DB::table('accounts')->where('role', 'Technicians')->get();
+        $technicians = DB::table('accounts as a')
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->where('r.role', 'Technicians')
+            ->select('a.*', 'r.role')
+            ->get();
         
         return view("mro.workorder.task", $viewdata)
             ->with('workOrders', $workOrders)
@@ -196,12 +200,27 @@ class WorkOrders extends Controller
     }
 
     public function getTechnicians($id){
-        $all = DB::table('accounts')->where('role', 'Technician')->get();
+        $all = DB::table('accounts as a')
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->where('r.role', 'Technician')
+            ->select(
+                'a.*',
+                'r.role',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname")
+            )
+            ->get();
 
         $assigned = DB::table('maintenance as m')
-            ->where('m.work_order_id', $id)
             ->rightJoin('accounts as a', 'a.id', '=', 'm.technicians_id')
-            ->select(['m.*', 'a.fullname', 'a.role'])
+            ->join('roles as r', 'r.id', '=', 'a.role_id')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->where('m.work_order_id', $id)
+            ->select(
+                'm.*',
+                'r.role',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname")
+            )
             ->get();
         
         

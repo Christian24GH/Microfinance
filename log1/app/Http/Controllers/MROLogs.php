@@ -11,11 +11,16 @@ class MROLogs extends Controller
         $viewdata = $this->init();
         $viewdata += ['pageTitle' => 'Maintenance Logs'];
 
-        $logs = DB::table('maintenance_logs', 'ml')
+        $logs = DB::table('maintenance_logs as ml')
             ->join('maintenance as m', 'm.id', '=', 'ml.maintenance_id')
             ->join('accounts as a', 'a.id', '=', 'm.technicians_id')
-            ->select('ml.*', 'a.fullname', 'm.id as mID')
-            ->orderBy('created_at', 'desc')
+            ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+            ->select(
+                'ml.*',
+                'm.id as mID',
+                DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname")
+            )
+            ->orderBy('ml.created_at', 'desc')
             ->get();
 
         return view("mro.log", $viewdata)

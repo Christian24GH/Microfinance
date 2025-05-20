@@ -17,8 +17,8 @@ Route::prefix('/login')->group(function()
 });
 Route::prefix('/register')->group(function()
 {
-    Route::get('/', [Register::class, 'index'])->name("register.index");
-    Route::post('/store', [Register::class, 'store'])->name("register.store");
+    Route::get('/', [Register::class, 'client_register_index'])->name("client.register.index");
+    Route::post('/store', [Register::class, 'client_register_store'])->name("client.register.store");
 });
 
 

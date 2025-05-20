@@ -1,6 +1,6 @@
 <?php
 // db.php - Database connection
-$conn = new mysqli("localhost", "root", "", "lown_db");
+$conn = new mysqli("localhost", "root", "", "microfinance");
 
 // Check for connection errors
 if ($conn->connect_error) {

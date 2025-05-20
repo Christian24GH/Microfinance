@@ -31,7 +31,14 @@
         <div class="mb-3">
             <label for="manager_name" class="form-label">Manager Name</label>
             @php
-                $managers = DB::table('accounts')->where('role', 'Warehouse Manager')->get(['id', 'fullname']);
+                $managers = DB::table('accounts as a')
+                    ->join('employee_info as e', 'e.id', '=', 'a.employee_id')
+                    ->join('roles as r', 'r.id', '=', 'a.role_id')
+                    ->where('r.role', 'Warehouse Manager')
+                    ->get([
+                        'a.id',
+                        DB::raw("CONCAT(e.firstname, ' ', COALESCE(e.middlename, ''), ' ', e.lastname) as fullname")
+                    ]);
             @endphp
 
             <select name="manager" class="form-select" required>

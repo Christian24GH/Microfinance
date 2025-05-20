@@ -31,12 +31,9 @@ return new class extends Migration
             $table->string('status', 20)->default('active');
         });
 
-        Schema::create('accounts', function(Blueprint $table){
-            $table->id();
-            $table->string('fullname', 255);
-            $table->string('username', 255)->unique();
-            $table->string('password', 255);
-            $table->enum('role', [
+        Schema::create('roles', function(Blueprint $table){
+             $table->id();
+             $table->enum('role', [
                 'Client',
                 'HR Supervisor',
                 'Finance Officer',
@@ -64,16 +61,22 @@ return new class extends Migration
                 'Team Leader',
                 'Loan Officer'
             ]);
-            $table->unsignedBigInteger('client_id')->nullable();
-            $table->unsignedBigInteger('employee_info')->nullable();
+        });
+        
+        Schema::create('accounts', function(Blueprint $table){
+            $table->id();
+            $table->string('fullname', 255);
+            $table->string('email', 255)->unique();
+            $table->string('password', 255);
+            $table->unsignedBigInteger('role_id');
+            $table->string('client_id')->nullable();
+            $table->unsignedBigInteger('employee_id')->nullable();
 
             //Foreign
             $table->foreign('client_id')->references('client_id')->on('client_info')->onDelete('cascade');
-
+            $table->foreign('employee_id')->references('id')->on('employee_info')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles');
         });
-
-        
-        
     }
 
     /**
@@ -83,6 +86,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('accounts');
+        Schema::dropIfExists('roles');
         Schema::dropIfExists('client_info');
     }
     

@@ -6,6 +6,7 @@ use App\Models\Accounts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Str;
 
@@ -17,25 +18,29 @@ class Login extends Controller
 
     public function login(Request $request){
         $request->validate([
-            'username' => 'required|string|min,10|exists:Accounts,username',
+            'email' => 'required|email|min:10|exists:Accounts,email',
             'password' => 'required|string'
         ]);
-
-        //$rememberme = $request->filled('remember');
         
-        if (!Auth::attempt($request->only('username', 'password'))) {
-            return back()->with(['fail' =>'Invalid Email or Password']);   
+         // Find user
+        $user = Accounts::where('email', $request->email)->first();
+
+        // Check password directly (plain text compare)
+        if ($user->password !== $request->password) {
+            return back()->withErrors(['password' => 'Invalid credentials']);
         }
 
-        $user = Accounts::where('username', $request->input('username'))->first();
+        // Fetch role
+        $role = DB::table('roles')->where('id', $user->role_id)->value('role');
 
+        // Generate token
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $sessionKey = Str::uuid()->toString();
 
         Cache::put("microfinance_cache_session:$sessionKey", $token, now()->addMinutes(60));
         
-        switch($user->role){
+        switch($role){
 
             case 'Employee':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
@@ -48,7 +53,7 @@ class Login extends Controller
             case 'Asset Admin':
             case 'Project Manager':
             case 'Warehouse Manager':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/LgtO/public/?sid=$sessionKey");
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/log1/public/?sid=$sessionKey");
                 break;
 
             //HR 2
@@ -69,15 +74,15 @@ class Login extends Controller
                 break;
 
             case 'Client':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/core1/index.php?sid=$sessionKey");
                 break;
 
             case 'Logistic2 Admin':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/Log2/template/admin.php?sid=$sessionKey");
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/log2/template/admin.php?sid=$sessionKey");
                 break;
             
             case 'Logistic2 User':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/Log2/template/user.php?sid=$sessionKey");
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/log2/template/user.php?sid=$sessionKey");
                 break;
                 
             default:

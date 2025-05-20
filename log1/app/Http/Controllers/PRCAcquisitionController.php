@@ -80,7 +80,7 @@ class PRCAcquisitionController extends Controller
                 ]);
             });
             if($validated['status'] == 'Approved'){
-                Http::get('http://localhost/dashboard/Microfinance/LgtO/public/api/vendor/approved_procurement/store');
+                Http::get('http://localhost/dashboard/Microfinance/log1/public/api/vendor/approved_procurement/store');
             }
         }catch(\Exception $e){
             dd($e);
@@ -98,10 +98,9 @@ class PRCAcquisitionController extends Controller
         $viewdata = $this->init();
         $viewdata += [
             'pageTitle'=>'Biddings',
-            
         ];
 
-        $bids = Http::get('http://localhost/dashboard/Microfinance/LgtO/public/api/vendor/vendor_offers');
+        $bids = Http::get('http://localhost/dashboard/Microfinance/log1/public/api/vendor/vendor_offers');
         
         return view('procurement.procurement.phase-two.bids', $viewdata)->with('bids', collect($bids->json()));
     }

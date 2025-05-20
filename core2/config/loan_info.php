@@ -2,7 +2,7 @@
 $host = 'localhost';
 $user = 'root';
 $password = '';
-$database = 'lown_db';
+$database = 'microfinance';
 
 $conn = new mysqli($host, $user, $password, $database);
 if ($conn->connect_error) die("DB connection error.");

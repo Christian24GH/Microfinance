@@ -52,7 +52,7 @@
 
             <div id="logoutCon" class="container rounded-pill border d-flex justify-content-center my-2 lato-bold">
                 <form action="" method="POST">
-                    <button class="btn py-2" type="submit">
+                    <button class="btn py-2" name="logout" type="submit">
                         Logout
                     </button>
                 </form>
