@@ -25,7 +25,7 @@
         <!--Content Here -->
         <!--Feel free to remove the style="min-height:100vh"-->
         <div class="container-fluid" style="min-height: 100vh">
-
+            <!--Dito mo ilipat yung UI mo-->
         </div>
 
         <?php

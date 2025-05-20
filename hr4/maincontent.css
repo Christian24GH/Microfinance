@@ -1,0 +1,40 @@
+#main-content {
+    flex-grow: 1;
+    padding: 25px; 
+    margin-left: 0px;
+    background-color: #5cbc9c; 
+    height: 100vh;
+    overflow-y: auto;
+}
+#main-content h1{
+    padding-left: 300px;
+
+}
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-gap: 30px;
+    padding-left: 60px; 
+    padding-right: 70px;
+    padding-top: 20px;
+
+}
+
+.overview-section,
+.employee-stats-section,
+.payroll-breakdown-section,
+.recent-activity-section,
+.quick-actions-section {
+    background-color: #4bc5ec;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
+}

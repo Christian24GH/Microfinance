@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include 'admin/db_connect.php';
+include 'db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Sanitize and assign POST values
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle file upload
     $resume_path = '';
     if (isset($_FILES['resume']) && $_FILES['resume']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = 'admin/uploads/resumes/';
+        $upload_dir = 'uploads/resumes/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true); // create directory if it doesn't exist
         }
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo 'Invalid request.';
 }
 
-header("Location: index.php?page=home");
+header("Location: index.php?page=applicant_management");
 exit();
 
 ?>

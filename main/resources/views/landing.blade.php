@@ -50,7 +50,7 @@
                         </div>
                         <ul class="custom-dropdown-menu list-unstyled m-0 p-2 bg-light rounded shadow position-absolute">
                             <li><a class="dropdown-item px-2 py-1" href="{{route('client.register.index')}}">Customer</a></li>
-                            <li><a class="dropdown-item px-2 py-1" href="">Employee</a></li>
+                            <li><a class="dropdown-item px-2 py-1" href="{{url('http://localhost/dashboard/Microfinance/hr1/index.php')}}">Employee</a></li>
                             <li><a class="dropdown-item px-2 py-1" href="https://pub-domain.onrender.com/docs/dashboard/vendor_signup/">Vendor</a></li>
                         </ul>
                     </li>

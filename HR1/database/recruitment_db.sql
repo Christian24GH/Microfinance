@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2025 at 09:29 PM
+-- Generation Time: May 20, 2025 at 04:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,7 +49,11 @@ CREATE TABLE `application` (
 
 INSERT INTO `application` (`id`, `firstname`, `middlename`, `lastname`, `gender`, `email`, `contact`, `address`, `cover_letter`, `position_id`, `resume_path`, `process_id`, `date_created`) VALUES
 (31, 'Roderick', '', 'Ogatcho', 'Male', 'gdelmonte261@gmail.com', '09263810311', 'Marilao, Bulacan', '', 1, '', 9, '2025-05-18 19:47:35'),
-(36, 'Nana', '', 'Silva', 'Female', 'nana@gmail.com', '09263810311', 'Marilao, Bulacan', '', 3, 'uploads/resumes/1747592115_01201212980.docx', 9, '2025-05-19 02:15:15');
+(36, 'Nana', '', 'Silva', 'Female', 'nana@gmail.com', '09263810311', 'Marilao, Bulacan', '', 3, 'uploads/resumes/1747592115_01201212980.docx', 9, '2025-05-19 02:15:15'),
+(46, 'Shine', 'O.', 'Rain', 'Female', 'rain@gmail.com', '09263810311', 'Marilao, Bulacan', '', 1, 'uploads/resumes/1747702149_Tour_Nararative_Report.docx', 0, '2025-05-20 08:49:09'),
+(47, 'Abby', 'A.', 'Moon', 'Female', 'abby@gmail.com', '09263810313', 'Marilao, Bulacan', '', 1, 'uploads/resumes/1747704416_0_day_Vulnerabilities.docx', 9, '2025-05-20 09:26:56'),
+(48, 'Ako', 'N.', 'Tito', 'Male', 'tito@gmail.com', '09263810311', 'Marilao, Bulacan', '', 3, 'uploads/resumes/1747705789_0_day_Vulnerabilities.docx', 0, '2025-05-20 09:49:49'),
+(49, 'Hello', 'H.', 'World', 'Male', 'hello@gmail.com', '09263810311', 'Marilao, Bulacan', '', 2, 'admin/uploads/resumes/1747706142_Event_Description.docx', 0, '2025-05-20 09:55:42');
 
 -- --------------------------------------------------------
 
@@ -78,7 +82,7 @@ INSERT INTO `employee_performance` (`id`, `application_id`, `rating`, `notes`, `
 --
 -- Table structure for table `employee_users`
 --
-/*
+
 CREATE TABLE `employee_users` (
   `id` int(11) NOT NULL,
   `full_name` varchar(100) NOT NULL,
@@ -89,7 +93,7 @@ CREATE TABLE `employee_users` (
   `status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-*/
+
 -- --------------------------------------------------------
 
 --
@@ -127,7 +131,8 @@ CREATE TABLE `positions` (
 INSERT INTO `positions` (`position_id`, `position_name`) VALUES
 (1, 'Web Developer'),
 (2, 'WEB DESIGNER'),
-(3, 'Tiga Saing');
+(3, 'Tiga Saing'),
+(4, 'Senior Dev');
 
 -- --------------------------------------------------------
 
@@ -244,7 +249,8 @@ CREATE TABLE `vacancy` (
 INSERT INTO `vacancy` (`id`, `position`, `availability`, `description`, `status`, `date_created`) VALUES
 (27, 'Web Developer', 2, 'asdqwdas', 1, '2025-05-19 02:11:51'),
 (28, 'WEB DESIGNER', 4, 'asdadqwc qas ', 1, '2025-05-19 02:12:27'),
-(29, 'Tiga Saing', 5, 'Saing lang', 1, '2025-05-19 02:14:16');
+(29, 'Tiga Saing', 5, 'Saing lang', 1, '2025-05-19 02:14:16'),
+(30, 'Senior Dev', 2, 'Just a Senior who needs a walking Stick', 1, '2025-05-20 01:20:45');
 
 --
 -- Indexes for dumped tables
@@ -267,12 +273,11 @@ ALTER TABLE `employee_performance`
 --
 -- Indexes for table `employee_users`
 --
-/*
 ALTER TABLE `employee_users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `username` (`username`);
-*/
+
 --
 -- Indexes for table `performance_reports`
 --
@@ -326,7 +331,7 @@ ALTER TABLE `vacancy`
 -- AUTO_INCREMENT for table `application`
 --
 ALTER TABLE `application`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `employee_performance`
@@ -337,10 +342,9 @@ ALTER TABLE `employee_performance`
 --
 -- AUTO_INCREMENT for table `employee_users`
 --
-/*
 ALTER TABLE `employee_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-*/
+
 --
 -- AUTO_INCREMENT for table `performance_reports`
 --
@@ -351,7 +355,7 @@ ALTER TABLE `performance_reports`
 -- AUTO_INCREMENT for table `positions`
 --
 ALTER TABLE `positions`
-  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `recognition`
@@ -382,7 +386,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vacancy`
 --
 ALTER TABLE `vacancy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables

@@ -57,9 +57,21 @@ class Login extends Controller
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/log1/public/?sid=$sessionKey");
                 break;
 
+            //HR 1
+            case 'HR Supervisor':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/hr1/admin/index.php?sid=$sessionKey");
+                break;
             //HR 2
-            case 'HR Administrator':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/hr2/hrms/Dashboard.php?sid=$sessionKey");
+            case 'HR 2 Admin':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/hr1/admin/index.php?sid=$sessionKey");
+                break;
+            //HR 3
+            case 'HR 3 Admin':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/hr1/admin/index.php?sid=$sessionKey");
+                break;
+            //HR 4
+            case 'HR 4':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/hr4/index.php?sid=$sessionKey");
                 break;
             //Core 2
             case 'Communication Officer':
