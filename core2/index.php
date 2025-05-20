@@ -1,5 +1,6 @@
 <?php
 // Database connection
+include __DIR__.'/session.php';
 $conn = new mysqli("localhost", "root", "", "microfinance");
 
 // Check connection

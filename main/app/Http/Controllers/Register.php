@@ -68,10 +68,13 @@ class Register extends Controller
                 'fr_last_name'         => $request->fr_last_name,
                 'fr_relationship'      => $request->fr_relationship,
                 'fr_contact_number'    => $request->fr_contact_number,
+                'fr_email'             => $request->fr_email,
                 'sr_first_name'        => $request->sr_first_name,
                 'sr_last_name'         => $request->sr_last_name,
                 'sr_relationship'      => $request->sr_relationship,
                 'sr_contact_number'    => $request->sr_contact_number,
+                'sr_email'             => $request->sr_email,
+                'email'                => $request->email
             ]);
 
             // Financial Info

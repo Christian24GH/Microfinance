@@ -11,10 +11,9 @@ class Accounts extends Authenticatable
     use HasFactory, HasApiTokens;
     public $timestamps = false;
     protected $table = "accounts";
-    protected $fillable = ['fullname', 'email', 'password', 'role', 'remember_token'];
+    protected $fillable = ['fullname', 'email', 'password', 'role'];
     protected $hidden = [
         'password',
-        'remember_token'
     ];
     protected $casts = [
         'role'=>'string'

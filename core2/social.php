@@ -1,4 +1,5 @@
 <?php
+include __DIR__.'/session.php';
 $host = 'localhost';
 $user = 'root';       
 $password = '';      

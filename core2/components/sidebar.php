@@ -46,8 +46,8 @@
                                 style="min-height: fit-content">
 
             <div class="container-fluid lato-regular mt-2">
-                <h6>Username</h6>
-                <small>Role</small>
+                <h6><?php echo isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'Undefined'?></h6>
+                <small><?php echo isset($_SESSION['role']) ? $_SESSION['role'] : 'Undefined'?></small>
             </div>
 
             <div id="logoutCon" class="container rounded-pill border d-flex justify-content-center my-2 lato-bold">

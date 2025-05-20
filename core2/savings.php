@@ -1,4 +1,5 @@
 <?php
+include __DIR__.'/session.php';
     // Database connection setup
     $host = 'localhost';          // your DB host
     $user = 'root';       // your DB username

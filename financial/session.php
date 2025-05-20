@@ -3,11 +3,11 @@
     if(!isset($_SESSION['id'])){
         $sid = $_GET['sid'] ?? null;
         if (!$sid) {
-            header("Location: http://localhost/dashboard/Microfinance/landing_page/public/login");
+            header("Location: http://localhost/dashboard/Microfinance/main/public/login");
             exit;
         };
         
-        $ch = curl_init("http://localhost/dashboard/Microfinance/landing_page/public/api/fetch-token?sid=" . urlencode($sid));
+        $ch = curl_init("http://localhost/dashboard/Microfinance/main/public/api/fetch-token?sid=" . urlencode($sid));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
@@ -16,12 +16,12 @@
         $token = $data['token'] ?? null;
         
         if (!$token) {
-            header("Location: http://localhost/dashboard/Microfinance/landing_page/public/login");
+            header("Location: http://localhost/dashboard/Microfinance/main/public/login");
             exit;
         }
         $_SESSION['token'] = $token;
     
-        $ch = curl_init("http://localhost/dashboard/Microfinance/landing_page/public/api/user");
+        $ch = curl_init("http://localhost/dashboard/Microfinance/main/public/api/user");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Authorization: Bearer $token",
@@ -34,7 +34,7 @@
         curl_close($ch);
     
         if ($code !== 200) {
-            header("Location: http://localhost/dashboard/Microfinance/landing_page/public/login");
+            header("Location: http://localhost/dashboard/Microfinance/main/public/login");
             exit;
         }
         $user = json_decode($response, true);
@@ -50,7 +50,7 @@
     }
 
     function terminate(){
-        header("Location: http://localhost/dashboard/Microfinance/landing_page/public/login");
+        header("Location: http://localhost/dashboard/Microfinance/main/public/login");
         session_unset();
         session_destroy();
         exit;
@@ -67,7 +67,7 @@
             terminate();
         }
         $data = json_encode(['sid' => $sid]);
-        $ch = curl_init("http://localhost/dashboard/Microfinance/landing_page/public/api/logout");
+        $ch = curl_init("http://localhost/dashboard/Microfinance/main/public/api/logout");
     
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);

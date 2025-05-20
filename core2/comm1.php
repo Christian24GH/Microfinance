@@ -1,4 +1,5 @@
 <?php
+include __DIR__.'/session.php';
 require_once 'config/db.php'; // Database connection
 
 // Fetch clients from database

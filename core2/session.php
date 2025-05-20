@@ -41,6 +41,7 @@
         /*you can now use $user values as values to the $_SESSION global var in php
         *   $_SESSION['fullname'];
         */
+
         $_SESSION['role']=$user['role'];
         $_SESSION['email']=$user['email'];
         $_SESSION['id']=$user['id'];
@@ -48,6 +49,7 @@
         $_SESSION['sid'] = $sid;
         $_SESSION['token'] = $token;
     }
+    
 
     function terminate(){
         header("Location: http://localhost/dashboard/Microfinance/main/public/login");

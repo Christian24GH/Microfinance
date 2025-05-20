@@ -22,6 +22,7 @@ class Login extends Controller
             'password' => 'required|string'
         ]);
         
+        
          // Find user
         $user = Accounts::where('email', $request->email)->first();
 
@@ -32,7 +33,7 @@ class Login extends Controller
 
         // Fetch role
         $role = DB::table('roles')->where('id', $user->role_id)->value('role');
-
+        
         // Generate token
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -70,7 +71,7 @@ class Login extends Controller
                 break;
             //Financial
             case 'Finance Officer':
-                return response()->redirectTo("http://localhost/dashboard/Microfinance/financial/index.php?sid=$sessionKey");
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/financial/general_ledger.php?sid=$sessionKey");
                 break;
 
             case 'Client':

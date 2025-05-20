@@ -176,8 +176,8 @@
                 <hr class="my-4">
 
                 <h3 class="mb-3">Contact References</h3>
-
-                <div class="row g-3">
+                <h5>First Reference</h5>
+                <div class="row mb-3 g-3">
                     <div class="col-md-4">
                         <label for="fr_first_name" class="form-label">First Name:</label>
                         <input type="text" class="form-control" name="fr_first_name" id="fr_first_name" required>
@@ -202,6 +202,14 @@
                         <label for="fr_contact_number" class="form-label">Contact Number:</label>
                         <input type="number" class="form-control" name="fr_contact_number" id="fr_contact_number" required>
                     </div>
+                    <div class="col-md">
+                        <label for="fr_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="fr_email" id="fr_email" required>
+                    </div>
+                </div>
+                 <h5>Second Reference</h5>
+                <div class="row mb-3 g-3">
+                   
                     <!-- Second reference -->
                     <div class="col-md-4">
                         <label for="sr_first_name" class="form-label">First Name:</label>
@@ -226,6 +234,10 @@
                     <div class="col-md-6">
                         <label for="sr_contact_number" class="form-label">Contact Number:</label>
                         <input type="number" class="form-control" name="sr_contact_number" id="sr_contact_number" required>
+                    </div>
+                    <div class="col-md">
+                        <label for="sr_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="sr_email" id="sr_email" required>
                     </div>
                 </div>
 
