@@ -42,11 +42,15 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link text-light" href="#about"><h6 class="m-0 lato-bold">Work with Us</h6></a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link text-light" href="#about"><h6 class="m-0 lato-bold">About Us</h6></a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="btn btn-light text-dark px-3 py-1 lato-bold" href="{{route('register.index')}}">Sign Up</a>
+                        <a class="btn btn-light text-dark px-3 py-1 lato-bold" href="{{route('login.index')}}">Sign In</a>
                     </li>
                 </ul>
             </div>

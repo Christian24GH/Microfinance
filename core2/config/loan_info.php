@@ -1,43 +1,40 @@
 <?php
-if (!isset($_GET['client_id'])) {
-    echo "No client selected.";
-    exit;
-}
+$host = 'localhost';
+$user = 'root';
+$password = '';
+$database = 'lown_db';
+
+$conn = new mysqli($host, $user, $password, $database);
+if ($conn->connect_error) die("DB connection error.");
 
 $client_id = intval($_GET['client_id']);
-
-// Establish database connection
-$conn = new mysqli('localhost', 'root', '', 'lown_db');
-if ($conn->connect_error) {
-    echo "Connection failed: " . htmlspecialchars($conn->connect_error); // Optional: for debugging
-    exit;
-}
-
-// Prepare SQL query using prepared statement
-$stmt = $conn->prepare("SELECT loan_id, amount, month, terms, purpose, loan_state 
-                        FROM loan_info 
-                        WHERE client_id = client_ids");
-$stmt->bind_param("i", $client_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$sql = "SELECT * FROM loan_info WHERE client_id = $client_id";
+$result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    echo "<ul class='list-unstyled m-0'>";
+    echo "<table class='table table-bordered text-center'>";
+    echo "<thead><tr>
+            <th>Loan ID</th>
+            <th>Amount</th>
+            <th>Months</th>
+            <th>Terms</th>
+            <th>Purpose</th>
+            <th>Interest</th>
+            <th>Total</th>
+          </tr></thead><tbody>";
     while ($row = $result->fetch_assoc()) {
-        echo "<li class='mb-3 border-bottom pb-2'>
-                <strong>Loan ID:</strong> " . htmlspecialchars($row['loan_id']) . "<br>
-                <strong>Amount:</strong> ₱" . htmlspecialchars($row['amount']) . "<br>
-                <strong>Months:</strong> " . htmlspecialchars($row['month']) . "<br>
-                <strong>Terms:</strong> " . htmlspecialchars($row['terms']) . "<br>
-                <strong>Purpose:</strong> " . htmlspecialchars($row['purpose']) . "<br>
-                <strong>Status:</strong> " . htmlspecialchars($row['loan_state']) . "
-              </li>";
+        echo "<tr>
+                <td>{$row['loan_id']}</td>
+                <td>{$row['amount']}</td>
+                <td>{$row['month']}</td>
+                <td>{$row['terms']}</td>
+                <td>{$row['purpose']}</td>
+                <td>{$row['interest']}</td>
+                <td>{$row['total']}</td>
+              </tr>";
     }
-    echo "</ul>";
+    echo "</tbody></table>";
 } else {
     echo "No loan records found.";
 }
-
-$stmt->close();
-$conn->close();
 ?>

@@ -1,10 +1,9 @@
 <?php
-    include __DIR__.'/session.php';
     // Database connection setup
     $host = 'localhost';          // your DB host
     $user = 'root';       // your DB username
     $password = ''; // your DB password
-    $database = 'microfinance';        // your DB name
+    $database = 'lown_db';        // your DB name
 
     // Create connection
     $conn = mysqli_connect($host, $user, $password, $database);

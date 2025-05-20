@@ -7,78 +7,88 @@ require 'PHPMailer/src/SMTP.php';
 require 'PHPMailer/src/Exception.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $clientIds = $_POST['client_ids'] ?? ''; // Comma-separated list of selected client IDs
+    $clientIds = $_POST['client_ids'] ?? '';
     $subject = $_POST['subject'] ?? '';
-    $message = $_POST['message'] ?? '';
-    $attachment = $_FILES['attachment'] ?? null;  // Handle file attachment
+    $messageTemplate = $_POST['message'] ?? '';
+    $attachment = $_FILES['attachment'] ?? null;
 
-    // Split client IDs and retrieve emails
-    $clientIdsArray = explode(',', $clientIds);
+    $clientIdsArray = array_filter(array_map('trim', explode(',', $clientIds)), 'is_numeric');
 
-    // Fetch emails from the database for the selected client IDs
-    require_once 'config/db.php'; // Connect to DB
+    if (empty($clientIdsArray)) {
+        die("Invalid or empty client IDs provided.");
+    }
 
-    // Prepare the SQL query to fetch emails for the selected client IDs
+    require_once 'config/db.php';
+
     $placeholders = implode(',', array_fill(0, count($clientIdsArray), '?'));
-    $sql = "SELECT email FROM client_info WHERE client_id IN ($placeholders)";
+    $sql = "SELECT client_id, first_name, middle_name, last_name, email, city, province FROM client_info WHERE client_id IN ($placeholders)";
     $stmt = $conn->prepare($sql);
 
-    // Bind the client IDs to the query
-    $stmt->bind_param(str_repeat('i', count($clientIdsArray)), ...$clientIdsArray);
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    $types = str_repeat('i', count($clientIdsArray));
+    $stmt->bind_param($types, ...$clientIdsArray);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
+    if ($result && $result->num_rows > 0) {
         $mail = new PHPMailer(true);
 
         try {
-            // Server settings
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'trulend2025@gmail.com'; // Your Gmail address
-            $mail->Password = 'hbzwztbrvcczeevo';  // Your app password
+            $mail->Username = 'trulend2025@gmail.com';
+            $mail->Password = 'hbzwztbrvcczeevo';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            // Disable SSL certificate verification (for debugging purposes)
-            $mail->SMTPOptions = array(
-                'ssl' => array(
+            $mail->SMTPOptions = [
+                'ssl' => [
                     'verify_peer' => false,
                     'verify_peer_name' => false,
                     'allow_self_signed' => true
-                )
-            );
+                ]
+            ];
 
-            // Sender's email address
             $mail->setFrom('trulend2025@gmail.com', 'Tru-Lend');
-            $mail->isHTML(true); // Set email format to HTML
-
-            // Email content
+            $mail->isHTML(true);
             $mail->Subject = $subject;
-            $mail->Body = nl2br(htmlspecialchars($message));
-            $mail->AltBody = strip_tags($message);
 
-            // Attach image if available
             if ($attachment && !empty($attachment['tmp_name'])) {
                 $mail->addAttachment($attachment['tmp_name'], $attachment['name']);
             }
 
-            // Loop through all emails and send the email to each
             while ($row = $result->fetch_assoc()) {
                 $recipientEmail = $row['email'];
+                $fullName = $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'];
+                $city = $row['city'];
+                $province = $row['province'];
 
-                // Set recipient for each email
-                $mail->clearAddresses();  // Clear any previously added addresses
-                $mail->addAddress($recipientEmail);
+                $personalizedMessage = str_replace(
+                    ['{{first_name}}', '{{middle_name}}', '{{last_name}}', '{{full_name}}', '{{city}}', '{{province}}'],
+                    [$row['first_name'], $row['middle_name'], $row['last_name'], $fullName, $city, $province],
+                    $messageTemplate
+                );
 
-                // Send email to the current recipient
-                if ($mail->send()) {
-                    // Log the email send into the database
-                    $logSql = "INSERT INTO email_logs (recipient_email, subject, message, status) VALUES (?, ?, ?, 'SENT')";
-                    $logStmt = $conn->prepare($logSql);
-                    $logStmt->bind_param('sss', $recipientEmail, $subject, $message);
-                    $logStmt->execute();
+                try {
+                    $mail->clearAddresses();
+                    $mail->addAddress($recipientEmail);
+                    $mail->Body = nl2br(htmlspecialchars($personalizedMessage));
+                    $mail->AltBody = strip_tags($personalizedMessage);
+                    $mail->send();
+
+              $logSql = "INSERT INTO email_logs (recipient_email, subject, message, status, send_date) VALUES (?, ?, ?, 'SENT', NOW())";
+$logStmt = $conn->prepare($logSql);
+if ($logStmt) {
+    $logStmt->bind_param('sss', $recipientEmail, $subject, $personalizedMessage);
+    $logStmt->execute();
+}
+
+                } catch (Exception $e) {
+                    error_log("Email to {$recipientEmail} failed: {$mail->ErrorInfo}");
                 }
             }
 

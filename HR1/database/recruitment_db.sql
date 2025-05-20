@@ -78,7 +78,7 @@ INSERT INTO `employee_performance` (`id`, `application_id`, `rating`, `notes`, `
 --
 -- Table structure for table `employee_users`
 --
-
+/*
 CREATE TABLE `employee_users` (
   `id` int(11) NOT NULL,
   `full_name` varchar(100) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE `employee_users` (
   `status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -201,7 +201,7 @@ INSERT INTO `social_recognitions` (`id`, `receiver_id`, `sender_id`, `recognitio
 --
 -- Table structure for table `users`
 --
-
+/*
 CREATE TABLE `users` (
   `id` int(30) NOT NULL,
   `doctor_id` int(30) NOT NULL,
@@ -212,16 +212,16 @@ CREATE TABLE `users` (
   `password` varchar(200) NOT NULL,
   `type` tinyint(1) NOT NULL DEFAULT 2 COMMENT '1=admin , 2 = staff'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+*/
 --
 -- Dumping data for table `users`
 --
-
+/*
 INSERT INTO `users` (`id`, `doctor_id`, `name`, `address`, `contact`, `username`, `password`, `type`) VALUES
 (1, 0, 'Administrator', '', '', 'admin', 'admin123', 1),
 (2, 0, 'Roderick', '', '', 'roderick@2025', '123', 2),
 (3, 0, 'Erick', '', '', 'Erick@gmail.com', '12345', 2);
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -267,11 +267,12 @@ ALTER TABLE `employee_performance`
 --
 -- Indexes for table `employee_users`
 --
+/*
 ALTER TABLE `employee_users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `username` (`username`);
-
+*/
 --
 -- Indexes for table `performance_reports`
 --
@@ -307,9 +308,10 @@ ALTER TABLE `social_recognitions`
 --
 -- Indexes for table `users`
 --
+/*
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
-
+*/
 --
 -- Indexes for table `vacancy`
 --
@@ -335,9 +337,10 @@ ALTER TABLE `employee_performance`
 --
 -- AUTO_INCREMENT for table `employee_users`
 --
+/*
 ALTER TABLE `employee_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
-
+*/
 --
 -- AUTO_INCREMENT for table `performance_reports`
 --
@@ -371,9 +374,10 @@ ALTER TABLE `social_recognitions`
 --
 -- AUTO_INCREMENT for table `users`
 --
+/*
 ALTER TABLE `users`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+*/
 --
 -- AUTO_INCREMENT for table `vacancy`
 --

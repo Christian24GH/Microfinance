@@ -29,9 +29,6 @@
                    <div class="py-3 hstack gap-3 nav-item">
                 <a class="nunito-nav nunito-nav" href="conso.php" >Consolidation</a>
             </div>
-                    <div class="py-3 hstack gap-3 nav-item">
-                <a class="nunito-nav nunito-nav" href="savings.php">Savings Tracking</a>
-            </div>
             <div class="py-3 hstack gap-3 nav-item">
                 <a class="nunito-nav nunito-nav" href="social.php" >Social Performance</a>
             </div>
@@ -49,13 +46,13 @@
                                 style="min-height: fit-content">
 
             <div class="container-fluid lato-regular mt-2">
-                <h6><?php echo isset($_SESSION['fullname']) ? $_SESSION['fullname'] : 'Undefined';?></h6>
-                <small><?php echo isset($_SESSION['role']) ? $_SESSION['role'] : 'Undefined';?></small>
+                <h6>Username</h6>
+                <small>Role</small>
             </div>
 
             <div id="logoutCon" class="container rounded-pill border d-flex justify-content-center my-2 lato-bold">
                 <form action="" method="POST">
-                    <button class="btn py-2" name="logout" type="submit">
+                    <button class="btn py-2" type="submit">
                         Logout
                     </button>
                 </form>

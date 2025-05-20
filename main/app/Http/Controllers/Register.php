@@ -15,7 +15,7 @@ class Register extends Controller
     public function store(Request $request){
         //dd($request->all());
         $request->validate([
-            'email' => 'email|unique:Accounts,email',
+            'username' => 'required|string|min,10|unique:Accounts,username',
             'fullname' => 'required',
             'password' => 'required',
             'confirmpassword' => 'required'

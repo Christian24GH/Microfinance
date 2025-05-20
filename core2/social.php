@@ -1,12 +1,8 @@
 <?php
-    include __DIR__.'/session.php';
-?>
-<?php
-// Database connection settings
 $host = 'localhost';
-$user = 'root';       // Replace with your DB username
-$password = '';       // Replace with your DB password
-$database = 'microfinance';
+$user = 'root';       
+$password = '';      
+$database = 'lown_db';
 
 // Create connection
 $conn = new mysqli($host, $user, $password, $database);
@@ -16,10 +12,27 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Query client_info table
-$sql = "SELECT * FROM client_info";
+$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+
+if ($search !== '') {
+    $sql = "SELECT * FROM client_info 
+            WHERE first_name LIKE '%$search%' 
+               OR last_name LIKE '%$search%' 
+               OR email LIKE '%$search%' 
+               OR contact_number LIKE '%$search%'";
+} else {
+    $sql = "SELECT * FROM client_info";
+}
+
 $result = $conn->query($sql);
+
+if (!$result) {
+    die("Query failed: " . $conn->error);
+}
+
+// Now you can use $result to fetch and display results
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,166 +84,169 @@ $result = $conn->query($sql);
         <?php 
             include __DIR__.'/components/header.php';
         ?>
-   <div class="container my-5 p-4 bg-white rounded shadow">
+ <div id="main" class="container my-5 p-4 bg-white rounded shadow">
   <h3 class="mb-4">Social Performance</h3>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover align-middle text-center">
-      <thead class="table-light">
-      <tr>
-        <th>Client ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Contact</th>
-        <th>Email</th>
-        <th>Loan Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-  <?php
-  if ($result->num_rows > 0):
-    while($row = $result->fetch_assoc()): 
-      $client_id = htmlspecialchars($row['client_id']);
-      $firstname = htmlspecialchars($row['firstname']);
-      $lastname = htmlspecialchars($row['lastname']);
-      $contact = htmlspecialchars($row['contact']);
-      $email = htmlspecialchars($row['email']);
-      $loan_stat = htmlspecialchars($row['loan_stat']); // Changed from $status
-?>
-  <tr>
-    <td><?= $client_id ?></td>
-    <td><?= $firstname ?></td>
-    <td><?= $lastname ?></td>
-    <td><?= $contact ?></td>
-    <td><?= $email ?></td>
-    <td><?= $loan_stat ?></td>
-    <td>
-      <!-- View Loan Button -->
-      <button 
-        type="button"
-        class="btn btn-outline-dark btn-sm viewLoanBtn" 
-        data-client_id="<?= $client_id ?>" 
-        data-bs-toggle="modal" 
-        data-bs-target="#viewModal"
-      >
-        <i class="bi bi-eye-fill"></i>
-      </button>
+   <form method="GET" action="" class="mb-4" id="search-form">
+    
 
-      <!-- Edit Button -->
-      <button 
-        class="btn btn-outline-dark btn-sm" 
-        data-bs-toggle="modal" 
-        data-bs-target="#editModal<?= $client_id ?>" 
-        title="Edit">
-        <i class="bi bi-pencil-fill"></i>
-      </button>
-    </td>
-  </tr>
 
-  <!-- Edit Modal -->
-  <div class="modal fade" id="editModal<?= $client_id ?>" tabindex="-1" aria-labelledby="editModalLabel<?= $client_id ?>" aria-hidden="true">
-    <div class="modal-dialog">
-      <form method="POST" action="config/edit_status.php">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel<?= $client_id ?>">Edit Client <?= $client_id ?></h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="client_id" value="<?= $client_id ?>">
-            <div class="mb-3">
-              <label class="form-label">First Name</label>
-              <input type="text" class="form-control" value="<?= $firstname ?>" readonly>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Last Name</label>
-              <input type="text" class="form-control" value="<?= $lastname ?>" readonly>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Contact</label>
-              <input type="text" class="form-control" value="<?= $contact ?>" readonly>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input type="email" class="form-control" value="<?= $email ?>" readonly>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Loan Status</label>
-              <select class="form-select" name="status" required>
-                <option value="Active" <?= ($loan_stat === 'Active') ? 'selected' : '' ?>>Active</option>
-                <option value="Inactive" <?= ($loan_stat === 'Inactive') ? 'selected' : '' ?>>Inactive</option>
-                <option value="Flagged" <?= ($loan_stat === 'Flagged') ? 'selected' : '' ?>>Flagged</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </form>
+<form method="GET" action="" class="mb-4" id="search-form">
+    <div class="input-group">
+        <input
+            type="search"
+            id="search-input"
+            name="search"
+            class="form-control"
+            placeholder="Search by name, contact, or email"
+            value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>"
+        />
+        <button class="btn btn-outline-dark" type="submit" id="search-btn">
+            <i class="bi <?= isset($_GET['search']) && $_GET['search'] !== '' ? 'bi-x-circle' : 'bi-search' ?>"></i>
+            <span id="search-btn-text"><?= isset($_GET['search']) && $_GET['search'] !== '' ? 'Clear' : 'Search' ?></span>
+        </button>
     </div>
+</form>
+
+<script>
+    document.getElementById('search-btn').addEventListener('click', function(e) {
+        const searchInput = document.getElementById('search-input');
+        if (searchInput.value !== '') {
+            // If the button currently says "Clear", clear input and reload
+            if (this.querySelector('#search-btn-text').textContent === 'Clear') {
+                e.preventDefault();
+                searchInput.value = '';
+                // Reload the page without search query params
+                window.location.href = window.location.pathname;
+            }
+            // else let the form submit to perform search
+        }
+    });
+</script>
+
+
+
+
+  <div class="table-responsive">
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-header-custom">
+        <tr>
+          <th>Client ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php if ($result->num_rows > 0): ?>
+          <?php while($row = $result->fetch_assoc()): ?>
+            <?php
+              $client_id = htmlspecialchars($row['client_id']);
+              $first_name = htmlspecialchars($row['first_name']);
+              $last_name = htmlspecialchars($row['last_name']);
+              $contact = htmlspecialchars($row['contact_number']);
+              $email = htmlspecialchars($row['email']);
+              $status = htmlspecialchars($row['status']);
+            ?>
+            <tr>
+              <td><?= $client_id ?></td>
+              <td><?= $first_name ?></td>
+              <td><?= $last_name ?></td>
+              <td><?= $contact ?></td>
+              <td><?= $email ?></td>
+              <td><?= $status ?></td>
+              <td>
+                <button class="btn btn-outline-dark viewLoanBtn"
+                        data-client-id="<?= $client_id ?>" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#viewModal">
+                  <i class="bi bi-eye-fill"></i>
+                </button>
+
+                <button class="btn btn-outline-dark" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#editModal<?= $client_id ?>">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editModal<?= $client_id ?>" tabindex="-1">
+              <div class="modal-dialog">
+                <form method="POST" action="config/edit_status.php">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Client <?= $client_id ?></h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="hidden" name="client_id" value="<?= $client_id ?>">
+                      <div class="mb-3">
+                        <label>Loan Status</label>
+                        <select class="form-select" name="status" required>
+                          <option value="Active" <?= $status == 'Active' ? 'selected' : '' ?>>Active</option>
+                          <option value="Inactive" <?= $status == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
+                          <option value="Flagged" <?= $status == 'Flagged' ? 'selected' : '' ?>>Flagged</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          <?php endwhile; ?>
+        <?php else: ?>
+          <tr><td colspan="7">No clients found.</td></tr>
+        <?php endif; ?>
+      </tbody>
+    </table>
   </div>
+</div>
 
-<?php endwhile; else: ?>
-  <tr>
-    <td colspan="7" class="text-center">No clients found.</td>
-  </tr>
-<?php endif; ?>
-
-
-<!-- VIEW MODAL -->
-<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+<!-- Loan View Modal -->
+<div class="modal fade" id="viewModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="viewModalLabel">Loan Information</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Loan Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div id="loadingSpinner" style="display:none;">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-        <div id="loanInfoContent">
-          <!-- Loan info will be loaded here dynamically -->
-        </div>
+        <div id="loanInfoContent">Loading...</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- JAVASCRIPT -->
+<!-- JavaScript Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-document.querySelectorAll('.viewLoanBtn').forEach(button => {
-  button.addEventListener('click', (e) => {
-    e.preventDefault(); // Stop default button behavior
+  document.querySelectorAll('.viewLoanBtn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const clientId = this.getAttribute('data-client-id');
+      const loanInfoContainer = document.getElementById('loanInfoContent');
+      loanInfoContainer.innerHTML = "Loading...";
 
-    const clientId = button.dataset.client_id;
-    const loanInfoContent = document.getElementById('loanInfoContent');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-
-    loanInfoContent.innerHTML = '';      // Clear previous content
-    loadingSpinner.style.display = 'block'; // Show loading spinner
-
-    fetch(`config/fetch_loan_info.php?client_id=${clientId}`)
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.text();
-      })
-      .then(data => {
-        loadingSpinner.style.display = 'none';  // Hide loading
-        loanInfoContent.innerHTML = data;        // Insert fetched loan info HTML
-      })
-      .catch(error => {
-        loadingSpinner.style.display = 'none';
-        loanInfoContent.innerHTML = `<p class="text-danger">Failed to load loan info: ${error.message}</p>`;
-      });
+      fetch(`config/loan_info.php?client_id=${clientId}`)
+        .then(res => res.text())
+        .then(data => {
+          loanInfoContainer.innerHTML = data;
+        })
+        .catch(err => {
+          loanInfoContainer.innerHTML = `<div class="text-danger">Error loading loan info.</div>`;
+        });
+    });
   });
-});
 </script>
 
 

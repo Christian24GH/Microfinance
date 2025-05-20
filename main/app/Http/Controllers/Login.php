@@ -17,17 +17,17 @@ class Login extends Controller
 
     public function login(Request $request){
         $request->validate([
-            'email' => 'required|email|exists:Accounts,email',
+            'username' => 'required|string|min,10|exists:Accounts,username',
             'password' => 'required|string'
         ]);
 
-        $rememberme = $request->filled('remember');
+        //$rememberme = $request->filled('remember');
         
-        if (!Auth::attempt($request->only('email', 'password'), $rememberme)) {
+        if (!Auth::attempt($request->only('username', 'password'))) {
             return back()->with(['fail' =>'Invalid Email or Password']);   
         }
 
-        $user = Accounts::where('email', $request->input('email'))->first();
+        $user = Accounts::where('username', $request->input('username'))->first();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -71,6 +71,15 @@ class Login extends Controller
             case 'Client':
                 return response()->redirectTo("http://localhost/dashboard/Microfinance/testapp/index.php?sid=$sessionKey");
                 break;
+
+            case 'Logistic2 Admin':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/Log2/template/admin.php?sid=$sessionKey");
+                break;
+            
+            case 'Logistic2 User':
+                return response()->redirectTo("http://localhost/dashboard/Microfinance/Log2/template/user.php?sid=$sessionKey");
+                break;
+                
             default:
                 return back()->with(['fail' =>'Invalid Role']);
                 break;

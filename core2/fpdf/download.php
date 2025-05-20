@@ -6,16 +6,24 @@ $loan_id = isset($_GET['loan_id']) ? intval($_GET['loan_id']) : 0;
 $conn = new mysqli('localhost','root','','lown_db');
 if($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 
-$sql = "SELECT loan.*, client_info.firstname, client_info.lastname 
-        FROM loan JOIN client_info ON loan.client_id = client_info.client_id 
-        WHERE loan.loan_id = $loan_id";
-$res = $conn->query($sql);
+$sql = "
+    SELECT loan_info.*, client_info.first_name, client_info.last_name 
+    FROM loan_info 
+    JOIN client_info ON loan_info.client_id = client_info.client_id 
+    WHERE loan_info.loan_id = ?
+";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $loan_id);
+$stmt->execute();
+$res = $stmt->get_result();
 
 if($res->num_rows == 0) {
     die("Loan data not found.");
 }
 $row = $res->fetch_assoc();
 
+$stmt->close();
 $conn->close();
 
 $pdf = new FPDF();
@@ -41,13 +49,12 @@ function addRow($pdf, $field, $value) {
 }
 
 addRow($pdf, 'Loan ID', $row['loan_id']);
-addRow($pdf, 'Client Name', $row['firstname'].' '.$row['lastname']);
-addRow($pdf, 'Loan Type', $row['loan_type']);
-addRow($pdf, 'Start Date', $row['start_date']);
-addRow($pdf, 'Interest Rate', $row['interest_rate'].'%');
-addRow($pdf, 'Term', $row['term']);
-addRow($pdf, 'Original Amount', '₱'.number_format($row['original_amount'], 2));
-addRow($pdf, 'Current Balance', '₱'.number_format($row['current_balance'], 2));
+addRow($pdf, 'Client Name', $row['first_name'] . ' ' . $row['last_name']);
+addRow($pdf, 'Purpose', $row['purpose']);
+addRow($pdf, 'Amount', '₱' . number_format($row['amount'], 2));
+addRow($pdf, 'Terms (months)', $row['terms']);
+addRow($pdf, 'Interest Rate', $row['interest'] . '%');
+addRow($pdf, 'Total to Pay', '₱' . number_format($row['total'], 2));
 
 $pdf->Output('D', 'loan_'.$loan_id.'_data.pdf');
 exit;
