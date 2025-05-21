@@ -1,0 +1,63 @@
+name: Laravel CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: testdb
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, bcmath, pdo, pdo_mysql, curl, dom, fileinfo, openssl, tokenizer, xml, ctype, json
+          coverage: none
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Generate key
+        run: php artisan key:generate
+
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h127.0.0.1 -uroot -proot --silent; do
+            sleep 1
+          done
+
+      - name: Run migrations and seeders
+        run: php artisan migrate --seed
+
+      - name: Run feature and unit tests
+        run: php artisan test
+
+      # Uncomment below to run Dusk browser tests (requires Dusk installed and configured)
+      # - name: Install Chrome
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y google-chrome-stable
+      # - name: Run Dusk tests
+      #   run: php artisan dusk 
