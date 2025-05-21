@@ -23,6 +23,7 @@ class HRController extends Controller
         $employees = Employee::with('department', 'position')->get();
         $recentClockings = ClockingRecord::with('employee')->latest()->limit(5)->get();
         $recentLeaves = LeaveRequest::with('employee', 'leaveType')->latest()->limit(5)->get();
+        $pendingLeaves = LeaveRequest::with('employee', 'leaveType')->where('status', 'pending')->latest()->limit(5)->get();
 
         // Real-time attendance status for each employee (latest clock-in/out)
         $attendanceStatus = [];
@@ -68,6 +69,7 @@ class HRController extends Controller
             'employees',
             'recentClockings',
             'recentLeaves',
+            'pendingLeaves',
             'attendanceStatus',
             'currentTimesheet',
             'timesheetsPendingApproval'

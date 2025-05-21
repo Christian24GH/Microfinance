@@ -119,7 +119,7 @@
                         <span>Approved</span>
                         <span>{{ $recentLeaves->where('status', 'approved')->count() }}</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-3">
+                    <div class="d-flex justify-content-between mb-2">
                         <span>Pending</span>
                         <span>{{ $recentLeaves->where('status', 'pending')->count() }}</span>
                     </div>
@@ -129,6 +129,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Date</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,6 +137,11 @@
                                 <tr>
                                     <td>{{ $leave->employee->name ?? 'N/A' }}</td>
                                     <td>{{ \Carbon\Carbon::parse($leave->start_date)->format('M d, Y') }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ $leave->status === 'approved' ? 'success' : ($leave->status === 'pending' ? 'warning' : 'secondary') }}">
+                                            {{ ucfirst($leave->status) }}
+                                        </span>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -143,6 +149,41 @@
                 </div>
             </div>
         </div>
+        <!-- Pending Leave Approvals Card -->
+        @if(!$pendingLeaves->isEmpty())
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card border-info h-100">
+                <div class="card-header bg-info text-white d-flex align-items-center">
+                    <i class="bi bi-hourglass-split me-2" style="font-size: 1.5rem;"></i>
+                    <span>PENDING LEAVE APPROVALS</span>
+                </div>
+                <div class="card-body">
+                    <h6 class="fw-bold">Recent Leave Requests Awaiting Approval</h6>
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Type</th>
+                                <th>Start</th>
+                                <th>End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pendingLeaves as $leave)
+                                <tr>
+                                    <td>{{ $leave->employee->name ?? 'N/A' }}</td>
+                                    <td>{{ $leave->leaveType->name ?? '-' }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($leave->start_date)->format('M d') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($leave->end_date)->format('M d') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <a href="{{ route('leave.leave_approval') }}" class="btn btn-sm btn-outline-info mt-2">View All Leave Approvals</a>
+                </div>
+            </div>
+        </div>
+        @endif
         <!-- Timesheets Pending Approval Card -->
         @if(!$timesheetsPendingApproval->isEmpty())
         <div class="col-lg-4 col-md-6 mb-4">

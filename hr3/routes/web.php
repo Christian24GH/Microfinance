@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/leave/approval', [LeaveController::class, 'approval'])->name('leave.leave_approval');
     Route::get('/leave/history', [LeaveController::class, 'history'])->name('leave.leave_history');
     Route::post('/leave/request/submit', [\App\Http\Controllers\LeaveController::class, 'submit'])->middleware('auth')->name('leave.request.submit');
+    Route::post('/leave/approve/{id}', [\App\Http\Controllers\LeaveController::class, 'approve'])->name('leave.approve');
+    Route::post('/leave/reject/{id}', [\App\Http\Controllers\LeaveController::class, 'reject'])->name('leave.reject');
 });
 
 // Employee and Time Entry Routes
@@ -179,4 +181,13 @@ Route::get('/api/claim-types', [ClaimTypeController::class, 'index']);
 // Prevent GET method not allowed error for reimburse
 Route::get('/claims/{claim}/reimburse', function() {
     return redirect()->route('claims.claim_submission')->with('error', 'You cannot access reimburse directly. Please use the Reimburse button.');
+});
+
+// DEBUG: Test Blade parsing
+Route::get('/test-blade', function() {
+    return view('test');
+});
+
+Route::get('/leave/approve/{id}', function() {
+    return redirect()->back()->with('error', 'Please use the Approve button, not the URL.');
 });

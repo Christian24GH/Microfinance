@@ -14,7 +14,8 @@ class LeaveController extends Controller
 
     public function approval()
     {
-        return view('testapp.leave.approval');
+        $leaveRequests = \App\Models\LeaveRequest::with(['employee', 'leaveType', 'approver'])->orderBy('created_at', 'desc')->get();
+        return view('testapp.leave.approval', compact('leaveRequests'));
     }
 
     public function history()
@@ -24,41 +25,15 @@ class LeaveController extends Controller
 
     public function index(Request $request)
     {
-        $user = auth()->user();
-        $employee = \App\Models\Employee::where('user_id', $user->id)->first();
-        $canFileLeave = true;
-        $errorMsg = null;
-        if (!$employee) {
-            $canFileLeave = false;
-            $errorMsg = 'You must be registered as an employee to file a leave request.';
-        } elseif (!\App\Models\Timesheet::where('employee_id', $employee->id)->exists()) {
-            $canFileLeave = false;
-            $errorMsg = 'You must have a timesheet before you can file a leave request.';
-        }
-        $leaveTypes = \App\Models\LeaveType::all();
-        $leaveRequests = $employee ? \App\Models\LeaveRequest::where('employee_id', $employee->id)->orderBy('created_at', 'desc')->get() : collect();
+        // Get all active employees
         $employees = \App\Models\Employee::where('status', 'active')->get();
-        return view('testapp.leave.request', compact('leaveTypes', 'leaveRequests', 'employee', 'employees', 'canFileLeave', 'errorMsg'));
+        $leaveTypes = \App\Models\LeaveType::all();
+        $leaveRequests = \App\Models\LeaveRequest::orderBy('created_at', 'desc')->get();
+        return view('testapp.leave.request', compact('leaveTypes', 'leaveRequests', 'employees'));
     }
 
     public function submit(Request $request)
     {
-        $user = auth()->user();
-        $employee = \App\Models\Employee::where('user_id', $user->id)->first();
-        if (!$employee) {
-            $msg = ['You must be registered as an employee to file a leave request.'];
-            if ($request->expectsJson()) {
-                return response()->json(['status'=>'error','message'=>$msg[0]], 422);
-            }
-            return redirect()->back()->withErrors($msg);
-        }
-        if (!\App\Models\Timesheet::where('employee_id', $employee->id)->exists()) {
-            $msg = ['You must have a timesheet before you can file a leave request.'];
-            if ($request->expectsJson()) {
-                return response()->json(['status'=>'error','message'=>$msg[0]], 422);
-            }
-            return redirect()->back()->withErrors($msg);
-        }
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,id',
             'leave_type_id' => 'required|exists:leave_types,id',
@@ -66,10 +41,14 @@ class LeaveController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
             'reason' => 'required|string',
         ]);
-        $start = Carbon::parse($validated['start_date']);
-        $end = Carbon::parse($validated['end_date']);
+        $employee = \App\Models\Employee::find($validated['employee_id']);
+        if (!$employee || !\App\Models\Timesheet::where('employee_id', $employee->id)->exists()) {
+            return redirect()->back()->withErrors(['Employee must have a timesheet to file a leave request.']);
+        }
+        $start = \Carbon\Carbon::parse($validated['start_date']);
+        $end = \Carbon\Carbon::parse($validated['end_date']);
         $total_days = $start->diffInDays($end) + 1;
-        $leave = \App\Models\LeaveRequest::create([
+        \App\Models\LeaveRequest::create([
             'employee_id' => $validated['employee_id'],
             'leave_type_id' => $validated['leave_type_id'],
             'start_date' => $validated['start_date'],
@@ -78,9 +57,26 @@ class LeaveController extends Controller
             'reason' => $validated['reason'],
             'status' => 'pending',
         ]);
-        if ($request->expectsJson()) {
-            return response()->json(['status'=>'success','leave_request'=>$leave]);
-        }
         return redirect()->back()->with('status', 'Leave request submitted successfully!');
+    }
+
+    public function approve($id)
+    {
+        $leave = \App\Models\LeaveRequest::findOrFail($id);
+        $employee = \App\Models\Employee::where('user_id', auth()->user()->id)->first();
+        $leave->status = 'approved';
+        $leave->approved_by = $employee ? $employee->id : null;
+        $leave->approved_at = now();
+        $leave->save();
+        return redirect()->back()->with('status', 'Leave approved!');
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $leave = \App\Models\LeaveRequest::findOrFail($id);
+        $leave->status = 'rejected';
+        $leave->rejection_reason = $request->input('rejection_reason', '');
+        $leave->save();
+        return redirect()->back()->with('status', 'Leave rejected!');
     }
 }
